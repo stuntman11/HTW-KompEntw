@@ -8,7 +8,7 @@ class TaxTest {
 
     @Test
     void testCalculateTax() {
-        var tax = new Tax(100);
+        var tax = new Tax(100,0.19);
         assertEquals(119, tax.getPriceWithTax());
         assertEquals(19, tax.getIncludedTax());
         assertEquals(100, tax.getBasePrice());
@@ -17,7 +17,7 @@ class TaxTest {
 
     @Test
     void testCalculateTaxAndRound() {
-        var tax = new Tax(1);
+        var tax = new Tax(1, 0.19);
         assertEquals(1, tax.getPriceWithTax());
         assertEquals(0, tax.getIncludedTax());
         assertEquals(1, tax.getBasePrice());
@@ -26,7 +26,7 @@ class TaxTest {
 
     @Test
     void testCalculateAbsoluteValue() {
-        var tax = new Tax(-100);
+        var tax = new Tax(-100, 0.19);
         assertEquals(119, tax.getPriceWithTax());
         assertEquals(19, tax.getIncludedTax());
         assertEquals(100, tax.getBasePrice());

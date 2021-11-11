@@ -13,16 +13,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CalculatorController {
 
-	@GetMapping("/tax")
-	public Tax tax(@RequestParam("priceInCents") int priceInCents) {
-		return new Tax(priceInCents);
-	}
-	
-	@ExceptionHandler(MissingServletRequestParameterException.class)
-	@ResponseBody
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public String handleMissingParams(MissingServletRequestParameterException ex) {
-	    String param = ex.getParameterName();
-	    return "required query parameter '" + param + "' is missing";
-	}
+    @GetMapping("/tax-with-rate")
+    public Tax taxWithCustomRate(@RequestParam("priceInCents") int priceInCents, @RequestParam("taxRate") Double taxRate) {
+        if (taxRate == null) {
+            taxRate = 0.0;
+        }
+        return new Tax(priceInCents, taxRate);
+    }
+
+    @GetMapping("/tax")
+    public Tax tax(@RequestParam("priceInCents") int priceInCents) {
+        return new Tax(priceInCents, 0.19);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleMissingParams(MissingServletRequestParameterException ex) {
+        String param = ex.getParameterName();
+        return "required query parameter '" + param + "' is missing";
+    }
 }
