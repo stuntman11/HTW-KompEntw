@@ -9,13 +9,11 @@ public class Tax {
 	private int priceWithTax;
 	private Double taxRate;
 
-	private static final Double TAX_RATE = 0.19;
-
-	public Tax(int basePriceInCent) {
+	public Tax(int basePriceInCent, Double taxRate) {
         basePriceInCent = Math.abs(basePriceInCent);
 		this.basePrice = basePriceInCent;
-		this.includedTax = (int)Math.round(basePrice * TAX_RATE);
+		this.includedTax = (int)Math.round(basePrice * taxRate);
 		this.priceWithTax = this.basePrice + this.includedTax;
-		this.taxRate = TAX_RATE;
+		this.taxRate = taxRate;
 	}
 }
