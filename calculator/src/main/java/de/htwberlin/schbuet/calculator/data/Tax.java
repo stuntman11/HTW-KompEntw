@@ -1,9 +1,12 @@
-package de.htwberlin.schbuet.calculator;
+package de.htwberlin.schbuet.calculator.data;
 
+import lombok.Data;
+
+@Data
 public class Tax {
-	public final int basePrice;
-	public final int tax;
-	public final int priceWithTax;
+	private int basePrice;
+	private int tax;
+	private int priceWithTax;
 	
 	public Tax(int basePrice) {
 		this.basePrice = basePrice;
