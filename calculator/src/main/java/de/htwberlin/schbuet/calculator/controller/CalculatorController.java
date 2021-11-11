@@ -1,5 +1,6 @@
-package de.htwberlin.schbuet.calculator;
+package de.htwberlin.schbuet.calculator.controller;
 
+import de.htwberlin.schbuet.calculator.data.Tax;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
