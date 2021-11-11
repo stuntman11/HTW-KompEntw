@@ -5,12 +5,17 @@ import lombok.Data;
 @Data
 public class Tax {
 	private int basePrice;
-	private int tax;
+	private int includedTax;
 	private int priceWithTax;
-	
-	public Tax(int basePrice) {
-		this.basePrice = basePrice;
-		this.tax = (int)Math.ceil(basePrice * 0.19);
-		this.priceWithTax = this.basePrice + this.tax;
+	private Double taxRate;
+
+	private static final Double TAX_RATE = 0.19;
+
+	public Tax(int basePriceInCent) {
+        basePriceInCent = Math.abs(basePriceInCent);
+		this.basePrice = basePriceInCent;
+		this.includedTax = (int)Math.round(basePrice * TAX_RATE);
+		this.priceWithTax = this.basePrice + this.includedTax;
+		this.taxRate = TAX_RATE;
 	}
 }

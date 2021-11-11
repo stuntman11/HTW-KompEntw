@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CalculatorController {
+
 	@GetMapping("/tax")
-	public Tax tax(@RequestParam("price") int price) {
-		return new Tax(price);
+	public Tax tax(@RequestParam("priceInCents") int priceInCents) {
+		return new Tax(priceInCents);
 	}
 	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
