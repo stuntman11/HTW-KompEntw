@@ -10,7 +10,6 @@ public class Tax {
 	private Double taxRate;
 
 	public Tax(int basePriceInCent, Double taxRate) {
-        basePriceInCent = Math.abs(basePriceInCent);
 		this.basePrice = basePriceInCent;
 		this.includedTax = (int)Math.round(basePrice * taxRate);
 		this.priceWithTax = this.basePrice + this.includedTax;
