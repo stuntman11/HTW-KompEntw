@@ -23,7 +23,7 @@ public class ImportProductService {
 
     /**
      *  Importiert alle Produktdaten einmal in der Stunde als Backup.
-     *  Die Daten werden nicht weiter verwendet und dienen nur der Erfüllung der Aufgabenstellung
+     *  Die Daten werden nicht weiter verwendet
      */
     @SneakyThrows
     @Scheduled(cron = "0 * * * *")
@@ -33,7 +33,7 @@ public class ImportProductService {
         var list = parseService.parseProductInputStream(url.openStream());
 
         for (ProductCsv csv : list) {
-            var item = productRepository.findById(csv.getIdAsUUID());
+            var item = productRepository.findTop1ByProductID(csv.getIdAsUUID());
             if (item == null) {
                 Product product = new Product();
                 product.setImportDate(new Date());

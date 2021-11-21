@@ -1,4 +1,4 @@
-package de.htwberlin.schbuet.data_warehouse.data.main;
+package de.htwberlin.schbuet.application.data.main;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,8 +18,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    private UUID productID;
-
     private String name;
 
     private String description;
@@ -33,5 +31,5 @@ public class Product {
     private int YearOfProduction;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date importDate;
+    private Date createdDate;
 }
