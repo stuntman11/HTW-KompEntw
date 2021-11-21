@@ -19,7 +19,7 @@ class CsvParseServiceTest {
 
     @Test
     void testParseCsvFromFile() {
-        var list = parseService.parseInputStream(is);
+        var list = parseService.parseProductInputStream(is);
 
         assertEquals(2, list.size());
         assertEquals("3284279A-0895-4669-A34A-894B2B415ED7", list.get(0).getId());

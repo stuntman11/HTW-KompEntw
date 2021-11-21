@@ -21,26 +21,30 @@ public class ImportProductService {
         this.productRepository = productRepository;
     }
 
+    /**
+     *  Importiert alle Produktdaten einmal in der Stunde als Backup.
+     *  Die Daten werden nicht weiter verwendet und dienen nur der Erfüllung der Aufgabenstellung
+     */
     @SneakyThrows
     @Scheduled(cron = "0 * * * *")
-    private void importAllProducts() {
+    private void importProductsFromMainApplicationService() {
 
-        URL url = new URL("http://localhost:8080/export/export.csv");
-        var list = parseService.parseInputStream(url.openStream());
+        URL url = new URL("http://localhost:8080/export-product/export.csv");
+        var list = parseService.parseProductInputStream(url.openStream());
 
         for (ProductCsv csv : list) {
             var item = productRepository.findById(csv.getIdAsUUID());
             if (item == null) {
                 Product product = new Product();
                 product.setImportDate(new Date());
-                setAndSaveItem(csv, product);
+                setAndSaveProduct(csv, product);
             } else {
-                setAndSaveItem(csv, item);
+                setAndSaveProduct(csv, item);
             }
         }
     }
 
-    private void setAndSaveItem(ProductCsv csv, Product item) {
+    private void setAndSaveProduct(ProductCsv csv, Product item) {
         item.setName(csv.getName());
         item.setCategory(csv.getName());
         item.setDescription(csv.getName());

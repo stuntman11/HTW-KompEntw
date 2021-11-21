@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import de.htwberlin.schbuet.data_warehouse.data.csv.ProductCsv;
+import de.htwberlin.schbuet.data_warehouse.data.csv.WarehouseItemCsv;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class CsvParseService {
 
     @SneakyThrows
-    public List<ProductCsv> parseInputStream(InputStream inputStream) {
+    public List<ProductCsv> parseProductInputStream(InputStream inputStream) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         CSVReader csvReader = new CSVReader(reader);
 
@@ -32,4 +33,23 @@ public class CsvParseService {
 
         return list;
     }
+
+    @SneakyThrows
+    public List<WarehouseItemCsv> parseWarehouseItemInputStream(InputStream inputStream) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        CSVReader csvReader = new CSVReader(reader);
+
+        CsvToBean<WarehouseItemCsv> csvToBean = new CsvToBeanBuilder<WarehouseItemCsv>(csvReader)
+                .withType(WarehouseItemCsv.class)
+                .withIgnoreLeadingWhiteSpace(true)
+                .build();
+
+        var list = csvToBean.parse();
+
+        reader.close();
+        csvReader.close();
+
+        return list;
+    }
+
 }
