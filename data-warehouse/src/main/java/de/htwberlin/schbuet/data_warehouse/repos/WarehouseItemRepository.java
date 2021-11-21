@@ -9,5 +9,5 @@ import java.util.UUID;
 @Transactional
 public interface  WarehouseItemRepository extends CrudRepository<WarehouseItem, Long> {
     WarehouseItem findById(UUID id);
-    WarehouseItem findTop1AndProductId(UUID id);
+    WarehouseItem findTop1ByProductId(UUID id);
 }

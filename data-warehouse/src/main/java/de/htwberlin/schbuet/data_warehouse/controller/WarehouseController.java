@@ -23,7 +23,7 @@ public class WarehouseController {
 
     @GetMapping("/product-info/{productId}")
     public WarehouseItem getAdditionalProductInfo(@PathVariable UUID productId) {
-        return warehouseItemRepository.findTop1AndProductId(productId);
+        return warehouseItemRepository.findTop1ByProductId(productId);
     }
 
     @PostMapping("/product-info/")

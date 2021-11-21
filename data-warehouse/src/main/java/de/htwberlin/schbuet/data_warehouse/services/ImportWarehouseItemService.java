@@ -33,7 +33,7 @@ public class ImportWarehouseItemService {
         var list = parseService.parseWarehouseItemInputStream(file.getInputStream());
         UUID id = null;
         for (WarehouseItemCsv csv : list) {
-            var item = warehouseItemRepository.findTop1AndProductId(csv.getIdAsUUID());
+            var item = warehouseItemRepository.findTop1ByProductId(csv.getIdAsUUID());
             if (item == null) {
                 WarehouseItem wItem = new WarehouseItem();
                 wItem.setDateCreated(new Date());
