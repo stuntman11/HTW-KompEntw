@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+      routes:
+        - id: calculator
+          uri: http://127.0.0.1:3000
+          predicates:
+            - Path=/calculator/tax, /calculator/tax-with-rate
+          filters:
+            - RewritePath=/calculator/(?<segment>.*), /$\{segment}
+
+server:
+  port: 8080
