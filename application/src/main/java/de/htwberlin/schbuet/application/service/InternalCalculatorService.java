@@ -4,7 +4,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import de.htwberlin.schbuet.application.data.body.TaxBody;
+import de.htwberlin.schbuet.application.data.body.BodyTax;
 
 @Service
 public class InternalCalculatorService implements CalculatorService {
@@ -14,8 +14,8 @@ public class InternalCalculatorService implements CalculatorService {
 		this.rest = restBuilder.rootUri("http://localhost:3000").build();
 	}
 	
-	public TaxBody getTaxForPrice(int priceInCents) {
+	public BodyTax getTaxForPrice(int priceInCents) {
 		String url = "/tax?priceInCents=" + priceInCents;
-		return rest.getForObject(url, TaxBody.class);
+		return rest.getForObject(url, BodyTax.class);
 	}
 }

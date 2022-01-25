@@ -6,8 +6,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class GeoCoords {
-	private double latitude;
-	private double longitude;
+	private final double latitude;
+	private final double longitude;
 	
 	public GeoCoords(double latitude, double longitude) {
 		this.latitude = latitude;

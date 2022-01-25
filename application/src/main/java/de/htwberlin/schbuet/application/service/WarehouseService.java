@@ -1,7 +1,6 @@
 package de.htwberlin.schbuet.application.service;
 
-import de.htwberlin.schbuet.application.data.body.TaxBody;
-import de.htwberlin.schbuet.application.data.response.ResponseWarehouseItem;
+import de.htwberlin.schbuet.application.data.body.BodyWarehouseItem;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -36,9 +35,9 @@ public class WarehouseService {
         restTemplate.exchange(API_URL, HttpMethod.POST, requestEntity, String.class);
     }
 
-    public ResponseWarehouseItem getWarehouseInfoForProduct(UUID productID) {
+    public BodyWarehouseItem getWarehouseInfoForProduct(UUID productID) {
         String url = "/" + productID.toString();
-        return restTemplate.getForObject(url, ResponseWarehouseItem.class);
+        return restTemplate.getForObject(url, BodyWarehouseItem.class);
     }
 
 }

@@ -13,6 +13,10 @@ spring:
     password: application
     driverClassName: org.h2.Driver
 
+geo:
+  apikey: "0123457"
+  language: "de-DE"
+
 server:
   servlet:
     context-path: /

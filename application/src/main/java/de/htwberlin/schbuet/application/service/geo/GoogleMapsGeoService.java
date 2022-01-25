@@ -9,18 +9,25 @@ import com.google.maps.model.AddressComponent;
 import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
+import de.htwberlin.schbuet.application.exceptions.GeoServiceException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class GoogleMapsGeoService implements GeoService {
 	private final GeoApiContext context;
-	private final String langauge;
+
+	@Value("${geo.apikey}")
+	private String apiKey;
+
+	@Value("${geo.language}")
+	private String language;
 	
-	public GoogleMapsGeoService(String key, String language) {
+	public GoogleMapsGeoService() {
 		this.context = new GeoApiContext.Builder()
-			.apiKey(key)
+			.apiKey(apiKey)
 			.disableRetries()
 			.build();
-		
-		this.langauge = language;
 	}
 	
 	@Override
@@ -54,7 +61,7 @@ public class GoogleMapsGeoService implements GeoService {
 		}
 		
 		if (results.length == 0) {
-			throw new GeoServiceException("Google maps returned no results for the specified address");
+			throw new GeoServiceException();
 		}
 		return results[0];
 	}
@@ -63,13 +70,13 @@ public class GoogleMapsGeoService implements GeoService {
 		GeocodingResult[] results;
 		
 		try {
-			results = GeocodingApi.reverseGeocode(context, location).language(langauge).await();
+			results = GeocodingApi.reverseGeocode(context, location).language(this.language).await();
 		} catch (ApiException | InterruptedException | IOException e) {
 			throw new GeoServiceException("Failed to execute reverse geocode on google maps", e);
 		}
 		
 		if (results.length == 0) {
-			throw new GeoServiceException("Google maps returned no results for the specified location");
+			throw new GeoServiceException();
 		}
 		return results[0];
 	}
