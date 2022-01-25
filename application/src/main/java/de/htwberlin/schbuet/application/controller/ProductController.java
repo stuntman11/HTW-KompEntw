@@ -1,17 +1,27 @@
 package de.htwberlin.schbuet.application.controller;
 
+import com.sun.istack.NotNull;
+import de.htwberlin.schbuet.application.data.body.BodyProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
 import de.htwberlin.schbuet.application.service.ProductService;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/v1/product")
+@Validated
 public class ProductController {
 
     private final ProductService productService;
@@ -21,13 +31,31 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
-    public ResponseFullProduct getFullProductInfo(@PathVariable UUID uuid) {
+    public ResponseFullProduct getFullProductInfo(@PathVariable @NotNull UUID uuid) {
         return productService.getDetailedProductInfo(uuid);
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET, produces="text/csv")
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<ResponseBasicProduct> getBasicProductList() {
         return productService.getAllProducts();
+    }
+
+    //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
+    @RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
+    public void deleteProduct(@PathVariable @NotNull UUID uuid) {
+        productService.deleteProduct(uuid);
+    }
+
+    //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public UUID createProduct(@Valid @RequestBody BodyProduct body) {
+        return productService.createProduct(body);
+    }
+
+    //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
+    @RequestMapping(value = "/{uuid}", method = RequestMethod.PUT)
+    public void updateProduct(@Valid @RequestBody BodyProduct body, @PathVariable @NotNull UUID uuid) {
+        productService.updateProduct(body, uuid);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -36,5 +64,26 @@ public class ProductController {
     public String handleMissingParams(MissingServletRequestParameterException ex) {
         String param = ex.getParameterName();
         return "required query parameter '" + param + "' is missing";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleConstraintViolation(ConstraintViolationException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

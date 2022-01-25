@@ -1,5 +1,6 @@
 package de.htwberlin.schbuet.application.service;
 
+import de.htwberlin.schbuet.application.data.body.BodyProduct;
 import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
@@ -12,6 +13,7 @@ import de.htwberlin.schbuet.application.service.geo.GoogleMapsGeoService;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,6 +44,45 @@ public class ProductService {
         return productRepository.findAll().stream()
                 .map(ResponseBasicProduct::new)
                 .collect(Collectors.toList());
+    }
+
+    public UUID createProduct(BodyProduct body) {
+        var product = Product.builder()
+                .name(body.getName())
+                .description(body.getDescription())
+                .category(body.getCategory())
+                .itemNumber(body.getItemNumber())
+                .priceInCents(body.getPriceInCents())
+                .yearOfProduction(body.getYearOfProduction())
+                .createdDate(Calendar.getInstance().getTime())
+                .build();
+
+        return productRepository.save(product).getId();
+    }
+
+    @SneakyThrows()
+    public void updateProduct(BodyProduct body, UUID uuid) {
+        var product = productRepository.findById(uuid);
+        if (product == null)
+            throw new ResourceNotFoundException(uuid);
+
+        product.setCategory(body.getCategory());
+        product.setDescription(body.getDescription());
+        product.setYearOfProduction(body.getYearOfProduction());
+        product.setItemNumber(body.getItemNumber());
+        product.setName(body.getName());
+        product.setPriceInCents(body.getPriceInCents());
+
+        productRepository.save(product);
+    }
+
+    @SneakyThrows()
+    public void deleteProduct(UUID uuid) {
+        var product = productRepository.findById(uuid);
+        if (product == null)
+            throw new ResourceNotFoundException(uuid);
+
+        productRepository.delete(product);
     }
 
     @SneakyThrows()
