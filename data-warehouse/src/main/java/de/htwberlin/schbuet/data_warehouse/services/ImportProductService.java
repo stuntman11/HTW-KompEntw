@@ -4,6 +4,7 @@ import de.htwberlin.schbuet.data_warehouse.data.csv.ProductCsv;
 import de.htwberlin.schbuet.data_warehouse.data.main.Product;
 import de.htwberlin.schbuet.data_warehouse.repos.ProductRepository;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.net.URL;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class ImportProductService {
 
     private final CsvParseService parseService;
@@ -42,6 +44,7 @@ public class ImportProductService {
                 setAndSaveProduct(csv, item);
             }
         }
+        log.info("Product list was imported");
     }
 
     private void setAndSaveProduct(ProductCsv csv, Product item) {

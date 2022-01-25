@@ -4,6 +4,7 @@ import de.htwberlin.schbuet.data_warehouse.data.csv.WarehouseItemCsv;
 import de.htwberlin.schbuet.data_warehouse.data.main.WarehouseItem;
 import de.htwberlin.schbuet.data_warehouse.repos.WarehouseItemRepository;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class ImportWarehouseItemService {
 
     private static final String TYPE = "text/csv";
@@ -44,6 +46,7 @@ public class ImportWarehouseItemService {
                 id = setAndSaveItem(csv, item);
             }
         }
+        log.info("Warehouse data was imported");
         return id;
     }
 

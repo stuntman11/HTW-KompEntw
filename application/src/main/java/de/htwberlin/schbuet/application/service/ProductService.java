@@ -11,6 +11,7 @@ import de.htwberlin.schbuet.application.repos.ProductRepository;
 import de.htwberlin.schbuet.application.service.geo.GeoCoords;
 import de.htwberlin.schbuet.application.service.geo.GoogleMapsGeoService;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -19,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ProductService {
     private final InternalCalculatorService calculatorService;
     private final WarehouseService warehouseService;
@@ -57,7 +59,9 @@ public class ProductService {
                 .createdDate(Calendar.getInstance().getTime())
                 .build();
 
-        return productRepository.save(product).getId();
+        var savedProduct = productRepository.save(product);
+        log.info("New product was created. ID:" + savedProduct.getId());
+        return savedProduct.getId();
     }
 
     @SneakyThrows()
@@ -74,6 +78,7 @@ public class ProductService {
         product.setPriceInCents(body.getPriceInCents());
 
         productRepository.save(product);
+        log.info("Product was updated. ID:" + product.getId());
     }
 
     @SneakyThrows()
@@ -83,6 +88,7 @@ public class ProductService {
             throw new ResourceNotFoundException(uuid);
 
         productRepository.delete(product);
+        log.info("Product was deleted. ID:" + uuid);
     }
 
     @SneakyThrows()

@@ -1,6 +1,7 @@
 package de.htwberlin.schbuet.application.service;
 
 import de.htwberlin.schbuet.application.data.body.BodyWarehouseItem;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class WarehouseService {
 
     private static final String API_URL = "http://localhost:8090/product-info";
@@ -33,6 +35,8 @@ public class WarehouseService {
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.exchange(API_URL, HttpMethod.POST, requestEntity, String.class);
+
+        log.info("Products were exported as CSV");
     }
 
     public BodyWarehouseItem getWarehouseInfoForProduct(UUID productID) {
