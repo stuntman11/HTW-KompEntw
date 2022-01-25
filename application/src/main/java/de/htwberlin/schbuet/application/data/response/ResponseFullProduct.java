@@ -1,6 +1,5 @@
 package de.htwberlin.schbuet.application.data.response;
 
-import de.htwberlin.schbuet.application.data.body.BodyWarehouseItem;
 import de.htwberlin.schbuet.application.data.body.BodyTax;
 import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.service.geo.GeoAddress;
@@ -14,7 +13,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseProduct {
+public class ResponseFullProduct {
 
     private UUID id;
     private String name;
@@ -26,7 +25,7 @@ public class ResponseProduct {
     private Date createdDate;
     private GeoAddress address;
 
-    public ResponseProduct(Product product, BodyTax bodyTax, GeoAddress geoAddress) {
+    public ResponseFullProduct(Product product, BodyTax bodyTax, GeoAddress geoAddress) {
         this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
