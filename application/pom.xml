@@ -14,7 +14,7 @@
 	<name>application</name>
 	<description>Main application</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -75,11 +75,6 @@
 			<groupId>com.google.maps</groupId>
 			<artifactId>google-maps-services</artifactId>
 			<version>1.0.1</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 	</dependencies>
 
