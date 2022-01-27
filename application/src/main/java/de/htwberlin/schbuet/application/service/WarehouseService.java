@@ -1,6 +1,6 @@
 package de.htwberlin.schbuet.application.service;
 
-import de.htwberlin.schbuet.application.data.body.RequestWarehouseItem;
+import de.htwberlin.schbuet.application.data.request.RequestWarehouseItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;

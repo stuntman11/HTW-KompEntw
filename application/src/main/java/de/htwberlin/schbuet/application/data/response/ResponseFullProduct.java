@@ -1,6 +1,6 @@
 package de.htwberlin.schbuet.application.data.response;
 
-import de.htwberlin.schbuet.application.data.body.RequestTax;
+import de.htwberlin.schbuet.application.data.request.RequestTax;
 import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.service.geo.GeoAddress;
 import lombok.AllArgsConstructor;

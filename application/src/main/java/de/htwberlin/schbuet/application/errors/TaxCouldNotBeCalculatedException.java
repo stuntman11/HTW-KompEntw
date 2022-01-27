@@ -1,4 +1,4 @@
-package de.htwberlin.schbuet.application.exceptions;
+package de.htwberlin.schbuet.application.errors;
 
 public class TaxCouldNotBeCalculatedException extends Exception{
 

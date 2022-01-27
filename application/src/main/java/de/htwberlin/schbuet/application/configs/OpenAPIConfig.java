@@ -1,4 +1,4 @@
-package de.htwberlin.schbuet.data_warehouse.swagger;
+package de.htwberlin.schbuet.application.configs;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -12,7 +12,7 @@ public class OpenAPIConfig {
     @Bean
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Data warehouse API")
+                .info(new Info().title("Main demo application API")
                         .description("Spring shop sample application")
                         .version("v1.0.0")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")))

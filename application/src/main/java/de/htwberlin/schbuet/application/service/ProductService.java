@@ -1,12 +1,12 @@
 package de.htwberlin.schbuet.application.service;
 
-import de.htwberlin.schbuet.application.data.body.RequestProduct;
+import de.htwberlin.schbuet.application.data.request.RequestProduct;
 import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
-import de.htwberlin.schbuet.application.exceptions.ResourceNotFoundException;
-import de.htwberlin.schbuet.application.exceptions.TaxCouldNotBeCalculatedException;
-import de.htwberlin.schbuet.application.exceptions.WarehouseResourceNotFoundException;
+import de.htwberlin.schbuet.application.errors.ResourceNotFoundException;
+import de.htwberlin.schbuet.application.errors.TaxCouldNotBeCalculatedException;
+import de.htwberlin.schbuet.application.errors.WarehouseResourceNotFoundException;
 import de.htwberlin.schbuet.application.repos.ProductRepository;
 import de.htwberlin.schbuet.application.service.geo.GeoCoords;
 import de.htwberlin.schbuet.application.service.geo.GoogleMapsGeoService;

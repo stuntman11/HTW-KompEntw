@@ -1,7 +1,7 @@
 package de.htwberlin.schbuet.application.controller;
 
 import com.sun.istack.NotNull;
-import de.htwberlin.schbuet.application.data.body.RequestProduct;
+import de.htwberlin.schbuet.application.data.request.RequestProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
 import de.htwberlin.schbuet.application.service.ProductService;

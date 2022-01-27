@@ -1,4 +1,4 @@
-package de.htwberlin.schbuet.data_warehouse.data.body;
+package de.htwberlin.schbuet.data_warehouse.data.request;
 
 import lombok.Data;
 

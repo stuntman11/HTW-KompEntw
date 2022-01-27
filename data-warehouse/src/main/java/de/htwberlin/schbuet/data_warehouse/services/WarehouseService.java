@@ -1,6 +1,6 @@
 package de.htwberlin.schbuet.data_warehouse.services;
 
-import de.htwberlin.schbuet.data_warehouse.data.body.RequestWarehouseItem;
+import de.htwberlin.schbuet.data_warehouse.data.request.RequestWarehouseItem;
 import de.htwberlin.schbuet.data_warehouse.data.main.WarehouseItem;
 import de.htwberlin.schbuet.data_warehouse.errors.ResourceNotFoundException;
 import de.htwberlin.schbuet.data_warehouse.repos.WarehouseItemRepository;

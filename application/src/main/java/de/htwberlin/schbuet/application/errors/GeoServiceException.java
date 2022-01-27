@@ -1,4 +1,4 @@
-package de.htwberlin.schbuet.application.exceptions;
+package de.htwberlin.schbuet.application.errors;
 
 public class GeoServiceException extends Exception {
 	private static final long serialVersionUID = 462844803647170540L;

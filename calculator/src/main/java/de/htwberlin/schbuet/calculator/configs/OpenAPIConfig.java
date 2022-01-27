@@ -1,4 +1,4 @@
-package de.htwberlin.schbuet.calculator.swagger;
+package de.htwberlin.schbuet.calculator.configs;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;

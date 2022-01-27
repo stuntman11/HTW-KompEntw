@@ -4,7 +4,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import de.htwberlin.schbuet.application.data.body.RequestTax;
+import de.htwberlin.schbuet.application.data.request.RequestTax;
 
 @Service
 public class InternalCalculatorService implements CalculatorService {
