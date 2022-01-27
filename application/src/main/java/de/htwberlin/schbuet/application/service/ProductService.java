@@ -37,8 +37,11 @@ public class ProductService {
     @SneakyThrows()
     public ResponseFullProduct getDetailedProductInfo(UUID uuid) {
         var product = productRepository.findById(uuid);
-        if (product == null)
+        if (product == null) {
+            log.warn("could not find a product with id " + uuid);
             throw new ResourceNotFoundException(uuid);
+        }
+
         return getFullProduct(product);
     }
 
@@ -48,14 +51,14 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public UUID createProduct(RequestProduct body) {
+    public UUID createProduct(RequestProduct requestProduct) {
         var product = Product.builder()
-                .name(body.getName())
-                .description(body.getDescription())
-                .category(body.getCategory())
-                .itemNumber(body.getItemNumber())
-                .priceInCents(body.getPriceInCents())
-                .yearOfProduction(body.getYearOfProduction())
+                .name(requestProduct.getName())
+                .description(requestProduct.getDescription())
+                .category(requestProduct.getCategory())
+                .itemNumber(requestProduct.getItemNumber())
+                .priceInCents(requestProduct.getPriceInCents())
+                .yearOfProduction(requestProduct.getYearOfProduction())
                 .createdDate(Calendar.getInstance().getTime())
                 .build();
 
@@ -65,17 +68,19 @@ public class ProductService {
     }
 
     @SneakyThrows()
-    public void updateProduct(RequestProduct body, UUID uuid) {
+    public void updateProduct(RequestProduct requestProduct, UUID uuid) {
         var product = productRepository.findById(uuid);
-        if (product == null)
+        if (product == null) {
+            log.warn("could not find a product with id " + uuid);
             throw new ResourceNotFoundException(uuid);
+        }
 
-        product.setCategory(body.getCategory());
-        product.setDescription(body.getDescription());
-        product.setYearOfProduction(body.getYearOfProduction());
-        product.setItemNumber(body.getItemNumber());
-        product.setName(body.getName());
-        product.setPriceInCents(body.getPriceInCents());
+        product.setCategory(requestProduct.getCategory());
+        product.setDescription(requestProduct.getDescription());
+        product.setYearOfProduction(requestProduct.getYearOfProduction());
+        product.setItemNumber(requestProduct.getItemNumber());
+        product.setName(requestProduct.getName());
+        product.setPriceInCents(requestProduct.getPriceInCents());
 
         productRepository.save(product);
         log.info("Product was updated. ID:" + product.getId());
