@@ -10,20 +10,19 @@ import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import de.htwberlin.schbuet.application.errors.GeoServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class GoogleMapsGeoService implements GeoService {
+
 	private final GeoApiContext context;
+	private final String language;
 
-	@Value("${geo.apikey}")
-	private String apiKey;
-
-	@Value("${geo.language}")
-	private String language;
-	
-	public GoogleMapsGeoService() {
+	public GoogleMapsGeoService(@Value("${geo.apikey}") String apiKey, @Value("${geo.language}") String language) {
+		this.language = language;
 		this.context = new GeoApiContext.Builder()
 			.apiKey(apiKey)
 			.disableRetries()
@@ -57,6 +56,7 @@ public class GoogleMapsGeoService implements GeoService {
 		try {
 			results = GeocodingApi.geocode(context, address).await();
 		} catch (ApiException | InterruptedException | IOException e) {
+			log.error("Failed to execute geocode on google maps");
 			throw new GeoServiceException("Failed to execute geocode on google maps", e);
 		}
 		
@@ -72,6 +72,7 @@ public class GoogleMapsGeoService implements GeoService {
 		try {
 			results = GeocodingApi.reverseGeocode(context, location).language(this.language).await();
 		} catch (ApiException | InterruptedException | IOException e) {
+			log.error("Failed to execute reverse geocode on google maps");
 			throw new GeoServiceException("Failed to execute reverse geocode on google maps", e);
 		}
 		
@@ -89,6 +90,7 @@ public class GoogleMapsGeoService implements GeoService {
 				}
 			}
 		}
+		log.error("Failed to find address component of type: " + type);
 		throw new GeoServiceException("Failed to find address component of type: " + type);
 	}
 	

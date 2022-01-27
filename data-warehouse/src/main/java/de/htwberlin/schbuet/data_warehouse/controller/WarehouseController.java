@@ -29,7 +29,7 @@ public class WarehouseController {
 
     @PostMapping("/product-info/")
     @ApiResponse(description = "Creates a new warehouse Item for a product. if there is already a item, it will be updated.")
-    public UUID createWareHouseItem(@RequestBody RequestWarehouseItem body) {
+    public UUID createWarehouseItem(@RequestBody RequestWarehouseItem body) {
         return warehouseService.createOrUpdateWarehouseItem(body);
     }
 

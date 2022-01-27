@@ -1,16 +1,18 @@
-package de.htwberlin.schbuet.application.data.request;
+package de.htwberlin.schbuet.application.data.response;
 
-import lombok.Builder;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Data
-@Builder
-public class RequestWarehouseItem {
+public class ResponseWarehouseItem {
+    private UUID id;
     private UUID productId;
     private int quantity;
     private int deliveryTimeInDays;
     private Double latitude;
     private Double longitude;
+    private Date dateCreated;
+    private Date dateLastUpdate;
 }

@@ -63,6 +63,7 @@ public class ProductService {
                 .build();
 
         var savedProduct = productRepository.save(product);
+        this.saveLocationToWarehouse(requestProduct, savedProduct.getId());
         log.info("New product was created. ID:" + savedProduct.getId());
         return savedProduct.getId();
     }
@@ -83,6 +84,8 @@ public class ProductService {
         product.setPriceInCents(requestProduct.getPriceInCents());
 
         productRepository.save(product);
+
+        this.saveLocationToWarehouse(requestProduct, product.getId());
         log.info("Product was updated. ID:" + product.getId());
     }
 
@@ -115,6 +118,10 @@ public class ProductService {
         var geoCoordinates = new GeoCoords(warehouse.getLatitude(), warehouse.getLongitude());
         var address = googleMapsGeoService.getAddressFromCoords(geoCoordinates);
 
-        return new ResponseFullProduct(product, tax, address);
+        return new ResponseFullProduct(product, tax, address, warehouse);
+    }
+
+    private void saveLocationToWarehouse(RequestProduct requestProduct, UUID productID) {
+        warehouseService.exportWarehouseItem(requestProduct, productID);
     }
 }

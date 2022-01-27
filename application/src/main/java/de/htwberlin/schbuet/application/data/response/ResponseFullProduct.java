@@ -23,9 +23,11 @@ public class ResponseFullProduct {
     private RequestTax price;
     private int yearOfProduction;
     private Date createdDate;
+    private int quantity;
+    private int deliveryTimeInDays;
     private GeoAddress address;
 
-    public ResponseFullProduct(Product product, RequestTax requestTax, GeoAddress geoAddress) {
+    public ResponseFullProduct(Product product, RequestTax requestTax, GeoAddress geoAddress, ResponseWarehouseItem warehouseItem) {
         this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
@@ -35,5 +37,7 @@ public class ResponseFullProduct {
         this.yearOfProduction = product.getYearOfProduction();
         this.createdDate = product.getCreatedDate();
         this.address = geoAddress;
+        this.quantity = warehouseItem.getQuantity();
+        this.deliveryTimeInDays = warehouseItem.getDeliveryTimeInDays();
     }
 }
