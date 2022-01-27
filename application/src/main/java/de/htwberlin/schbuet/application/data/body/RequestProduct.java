@@ -4,9 +4,10 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 @Data
-public class BodyProduct {
+public class RequestProduct {
 
     @NotBlank(message = "Name is mandatory")
     private String name;
@@ -20,6 +21,7 @@ public class BodyProduct {
     @NotBlank(message = "Item number is mandatory")
     private String itemNumber;
 
+    @Positive
     private int priceInCents;
 
     @Min(1900)

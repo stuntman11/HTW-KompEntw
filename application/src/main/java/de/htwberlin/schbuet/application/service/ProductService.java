@@ -1,6 +1,6 @@
 package de.htwberlin.schbuet.application.service;
 
-import de.htwberlin.schbuet.application.data.body.BodyProduct;
+import de.htwberlin.schbuet.application.data.body.RequestProduct;
 import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
@@ -48,7 +48,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public UUID createProduct(BodyProduct body) {
+    public UUID createProduct(RequestProduct body) {
         var product = Product.builder()
                 .name(body.getName())
                 .description(body.getDescription())
@@ -65,7 +65,7 @@ public class ProductService {
     }
 
     @SneakyThrows()
-    public void updateProduct(BodyProduct body, UUID uuid) {
+    public void updateProduct(RequestProduct body, UUID uuid) {
         var product = productRepository.findById(uuid);
         if (product == null)
             throw new ResourceNotFoundException(uuid);
@@ -84,8 +84,10 @@ public class ProductService {
     @SneakyThrows()
     public void deleteProduct(UUID uuid) {
         var product = productRepository.findById(uuid);
-        if (product == null)
+        if (product == null) {
+            log.warn("could not delete resource with uuid " + uuid);
             throw new ResourceNotFoundException(uuid);
+        }
 
         productRepository.delete(product);
         log.info("Product was deleted. ID:" + uuid);
@@ -94,12 +96,16 @@ public class ProductService {
     @SneakyThrows()
     private ResponseFullProduct getFullProduct(Product product) {
         var tax = calculatorService.getTaxForPrice(product.getPriceInCents());
-        if (tax == null)
+        if (tax == null) {
+            log.warn("could not get tax for price");
             throw new TaxCouldNotBeCalculatedException();
+        }
 
         var warehouse = warehouseService.getWarehouseInfoForProduct(product.getId());
-        if (warehouse == null)
+        if (warehouse == null) {
+            log.warn("There is no warehouse item for the product with uuid " + product.getId());
             throw new WarehouseResourceNotFoundException(product.getId());
+        }
 
         var geoCoordinates = new GeoCoords(warehouse.getLatitude(), warehouse.getLongitude());
         var address = googleMapsGeoService.getAddressFromCoords(geoCoordinates);

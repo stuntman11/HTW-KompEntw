@@ -1,7 +1,7 @@
 package de.htwberlin.schbuet.application.controller;
 
 import com.sun.istack.NotNull;
-import de.htwberlin.schbuet.application.data.body.BodyProduct;
+import de.htwberlin.schbuet.application.data.body.RequestProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
 import de.htwberlin.schbuet.application.service.ProductService;
@@ -30,31 +30,31 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
+    @GetMapping(value = "/{uuid}")
     public ResponseFullProduct getFullProductInfo(@PathVariable @NotNull UUID uuid) {
         return productService.getDetailedProductInfo(uuid);
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @GetMapping(value = "/all")
     public List<ResponseBasicProduct> getBasicProductList() {
         return productService.getAllProducts();
     }
 
     //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
-    @RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{uuid}")
     public void deleteProduct(@PathVariable @NotNull UUID uuid) {
         productService.deleteProduct(uuid);
     }
 
     //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public UUID createProduct(@Valid @RequestBody BodyProduct body) {
+    @PostMapping(value = "/")
+    public UUID createProduct(@Valid @RequestBody RequestProduct body) {
         return productService.createProduct(body);
     }
 
     //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
-    @RequestMapping(value = "/{uuid}", method = RequestMethod.PUT)
-    public void updateProduct(@Valid @RequestBody BodyProduct body, @PathVariable @NotNull UUID uuid) {
+    @PutMapping(value = "/{uuid}")
+    public void updateProduct(@Valid @RequestBody RequestProduct body, @PathVariable @NotNull UUID uuid) {
         productService.updateProduct(body, uuid);
     }
 

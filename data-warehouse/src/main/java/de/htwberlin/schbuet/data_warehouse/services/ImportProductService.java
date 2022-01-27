@@ -8,7 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.net.URL;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Date;
 
 @Service
@@ -24,27 +25,32 @@ public class ImportProductService {
     }
 
     /**
-     *  Importiert alle Produktdaten einmal in der Stunde als Backup.
-     *  Die Daten werden nicht weiter verwendet
+     * Importiert alle Produktdaten einmal in der Stunde als Backup.
+     * Die Daten werden nicht weiter verwendet
      */
     @SneakyThrows
     @Scheduled(cron = "0 * * * *")
     private void importProductsFromMainApplicationService() {
 
-        URL url = new URL("http://localhost:8080/export-product/export.csv");
-        var list = parseService.parseProductInputStream(url.openStream());
+        var file = new File("export-products.csv");
+        if (file.exists() && file.isFile() && file.canRead()) {
+            var inputStream = new FileInputStream(file);
+            var list = parseService.parseProductInputStream(inputStream);
 
-        for (ProductCsv csv : list) {
-            var item = productRepository.findTop1ByProductID(csv.getIdAsUUID());
-            if (item == null) {
-                Product product = new Product();
-                product.setImportDate(new Date());
-                setAndSaveProduct(csv, product);
-            } else {
-                setAndSaveProduct(csv, item);
+            for (ProductCsv csv : list) {
+                var item = productRepository.findTop1ByProductID(csv.getIdAsUUID());
+                if (item == null) {
+                    Product product = new Product();
+                    product.setImportDate(new Date());
+                    setAndSaveProduct(csv, product);
+                } else {
+                    setAndSaveProduct(csv, item);
+                }
             }
+            log.info("Product list was imported");
+        } else {
+            log.warn("Cannot import CSV");
         }
-        log.info("Product list was imported");
     }
 
     private void setAndSaveProduct(ProductCsv csv, Product item) {

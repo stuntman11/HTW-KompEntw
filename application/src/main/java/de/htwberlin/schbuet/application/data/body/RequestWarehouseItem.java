@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-public class BodyWarehouseItem {
+public class RequestWarehouseItem {
     private UUID id;
     private UUID productId;
     private int quantity;

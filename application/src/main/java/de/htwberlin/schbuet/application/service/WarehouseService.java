@@ -1,6 +1,6 @@
 package de.htwberlin.schbuet.application.service;
 
-import de.htwberlin.schbuet.application.data.body.BodyWarehouseItem;
+import de.htwberlin.schbuet.application.data.body.RequestWarehouseItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -39,9 +39,9 @@ public class WarehouseService {
         log.info("Products were exported as CSV");
     }
 
-    public BodyWarehouseItem getWarehouseInfoForProduct(UUID productID) {
+    public RequestWarehouseItem getWarehouseInfoForProduct(UUID productID) {
         String url = "/" + productID.toString();
-        return restTemplate.getForObject(url, BodyWarehouseItem.class);
+        return restTemplate.getForObject(url, RequestWarehouseItem.class);
     }
 
 }
