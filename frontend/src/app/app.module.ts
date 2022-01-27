@@ -11,6 +11,7 @@ import {ProductDetailsComponent} from './components/product-details/product-deta
 import {HomeComponent} from './components/home/home.component';
 import {RouterModule, Routes} from "@angular/router";
 import {AdminProductComponent} from './components/admin-product/admin-product.component';
+import {HttpClientModule} from "@angular/common/http";
 
 const routes: Routes = [
   {path: 'shop', component: HomeComponent},
@@ -52,6 +53,7 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     RouterModule.forRoot(
       routes,
       {enableTracing: false, relativeLinkResolution: 'legacy'}

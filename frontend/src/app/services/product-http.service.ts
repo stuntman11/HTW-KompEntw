@@ -9,7 +9,7 @@ import {BodyProduct} from "../models/body-product";
 @Injectable({
   providedIn: 'root'
 })
-export class ProductHttpServiceService {
+export class ProductHttpService {
 
   constructor(private http: HttpClient) {
   }
