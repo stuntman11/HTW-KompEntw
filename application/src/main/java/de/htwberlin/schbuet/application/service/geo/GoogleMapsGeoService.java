@@ -9,18 +9,24 @@ import com.google.maps.model.AddressComponent;
 import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
+import de.htwberlin.schbuet.application.errors.GeoServiceException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
+@Slf4j
 public class GoogleMapsGeoService implements GeoService {
+
 	private final GeoApiContext context;
-	private final String langauge;
-	
-	public GoogleMapsGeoService(String key, String language) {
+	private final String language;
+
+	public GoogleMapsGeoService(@Value("${geo.apikey}") String apiKey, @Value("${geo.language}") String language) {
+		this.language = language;
 		this.context = new GeoApiContext.Builder()
-			.apiKey(key)
+			.apiKey(apiKey)
 			.disableRetries()
 			.build();
-		
-		this.langauge = language;
 	}
 	
 	@Override
@@ -50,11 +56,12 @@ public class GoogleMapsGeoService implements GeoService {
 		try {
 			results = GeocodingApi.geocode(context, address).await();
 		} catch (ApiException | InterruptedException | IOException e) {
+			log.error("Failed to execute geocode on google maps");
 			throw new GeoServiceException("Failed to execute geocode on google maps", e);
 		}
 		
 		if (results.length == 0) {
-			throw new GeoServiceException("Google maps returned no results for the specified address");
+			throw new GeoServiceException();
 		}
 		return results[0];
 	}
@@ -63,13 +70,14 @@ public class GoogleMapsGeoService implements GeoService {
 		GeocodingResult[] results;
 		
 		try {
-			results = GeocodingApi.reverseGeocode(context, location).language(langauge).await();
+			results = GeocodingApi.reverseGeocode(context, location).language(this.language).await();
 		} catch (ApiException | InterruptedException | IOException e) {
+			log.error("Failed to execute reverse geocode on google maps");
 			throw new GeoServiceException("Failed to execute reverse geocode on google maps", e);
 		}
 		
 		if (results.length == 0) {
-			throw new GeoServiceException("Google maps returned no results for the specified location");
+			throw new GeoServiceException();
 		}
 		return results[0];
 	}
@@ -82,6 +90,7 @@ public class GoogleMapsGeoService implements GeoService {
 				}
 			}
 		}
+		log.error("Failed to find address component of type: " + type);
 		throw new GeoServiceException("Failed to find address component of type: " + type);
 	}
 	

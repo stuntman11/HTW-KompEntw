@@ -6,10 +6,10 @@ import lombok.ToString;
 @Getter
 @ToString
 public class GeoAddress {
-	private String country;
-	private String city;
-	private String postalCode;
-	private String street;
+	private final String country;
+	private final String city;
+	private final String postalCode;
+	private final String street;
 	
 	public GeoAddress(String country, String city, String postalCode, String street) {
 		this.country = country;

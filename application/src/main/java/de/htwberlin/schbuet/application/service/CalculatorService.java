@@ -1,7 +1,7 @@
 package de.htwberlin.schbuet.application.service;
 
-import de.htwberlin.schbuet.application.data.body.TaxBody;
+import de.htwberlin.schbuet.application.data.request.RequestTax;
 
 public interface CalculatorService {
-	TaxBody getTaxForPrice(int priceInCents);
+	RequestTax getTaxForPrice(int priceInCents);
 }

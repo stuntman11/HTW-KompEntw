@@ -43,7 +43,7 @@ public class CalculatorController {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleContraintViolation(ConstraintViolationException ex) {
+    public String handleConstraintViolation(ConstraintViolationException ex) {
     	return ex.getMessage();
     }
 }

@@ -8,18 +8,11 @@ import java.util.UUID;
 @Data
 public class ResponseWarehouseItem {
     private UUID id;
-
     private UUID productId;
-
     private int quantity;
-
     private int deliveryTimeInDays;
-
     private Double latitude;
-
     private Double longitude;
-
     private Date dateCreated;
-
     private Date dateLastUpdate;
 }

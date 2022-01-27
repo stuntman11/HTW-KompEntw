@@ -1,0 +1,9 @@
+<section class="py-5">
+  <div class="container px-4 px-lg-5 mt-5">
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+      <ng-container *ngIf="products">
+        <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
+      </ng-container>
+    </div>
+  </div>
+</section>
