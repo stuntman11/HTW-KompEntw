@@ -14,12 +14,12 @@ import java.util.Date;
 
 @Service
 @Slf4j
-public class ImportProductService {
+public class ImportService {
 
-    private final CsvParseService parseService;
+    private final CsvService parseService;
     private final ProductRepository productRepository;
 
-    public ImportProductService(CsvParseService parseService, ProductRepository productRepository) {
+    public ImportService(CsvService parseService, ProductRepository productRepository) {
         this.parseService = parseService;
         this.productRepository = productRepository;
     }
@@ -30,7 +30,7 @@ public class ImportProductService {
      */
     @SneakyThrows
     @Scheduled(cron = "0 * * * *")
-    private void importProductsFromMainApplicationService() {
+    public void importProductsFromCsv() {
 
         var file = new File("export-products.csv");
         if (file.exists() && file.isFile() && file.canRead()) {

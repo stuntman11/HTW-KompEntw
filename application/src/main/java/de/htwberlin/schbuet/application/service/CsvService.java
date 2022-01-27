@@ -3,12 +3,16 @@ package de.htwberlin.schbuet.application.service;
 import com.opencsv.CSVWriter;
 import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.repos.ProductRepository;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.FileWriter;
 import java.io.StringWriter;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class CsvService {
 
     private final ProductRepository productRepository;
@@ -51,5 +55,13 @@ public class CsvService {
         csvWriter.writeNext(rowData);
 
         return csvWriter;
+    }
+
+    @SneakyThrows
+    public void exportCsvToFile(){
+        FileWriter myWriter = new FileWriter("export-products.csv");
+        myWriter.write(this.getAllProductAsCSV().toString());
+        myWriter.close();
+        log.info("export-products.csv was created");
     }
 }

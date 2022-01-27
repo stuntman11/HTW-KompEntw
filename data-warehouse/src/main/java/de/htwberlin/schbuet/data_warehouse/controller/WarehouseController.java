@@ -2,7 +2,6 @@ package de.htwberlin.schbuet.data_warehouse.controller;
 
 import de.htwberlin.schbuet.data_warehouse.data.body.RequestWarehouseItem;
 import de.htwberlin.schbuet.data_warehouse.data.main.WarehouseItem;
-import de.htwberlin.schbuet.data_warehouse.repos.WarehouseItemRepository;
 import de.htwberlin.schbuet.data_warehouse.services.WarehouseService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +22,14 @@ public class WarehouseController {
     }
 
     @GetMapping("/product-info/{productId}")
-    @ApiResponse(description = "Returns a warehouse item")
+    @ApiResponse(description = "Returns a warehouse item for the given UUID.")
     public WarehouseItem getAdditionalProductInfo(@PathVariable UUID productId) {
         return warehouseService.getWarehouseItemByUUID(productId);
     }
 
     @PostMapping("/product-info/")
-    public UUID createWareHouseItem(@RequestParam("csvFile") RequestWarehouseItem body) {
+    @ApiResponse(description = "Creates a new warehouse Item for a product. if there is already a item, it will be updated.")
+    public UUID createWareHouseItem(@RequestBody RequestWarehouseItem body) {
         return warehouseService.createOrUpdateWarehouseItem(body);
     }
 

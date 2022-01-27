@@ -6,15 +6,15 @@ import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CsvParseServiceTest {
+class CsvServiceTest {
 
     InputStream is;
-    CsvParseService parseService;
+    CsvService parseService;
 
     @BeforeEach
     void setUp(){
         is = getClass().getClassLoader().getResourceAsStream("TestCsv.csv");
-        parseService = new CsvParseService();
+        parseService = new CsvService();
     }
 
     @Test
