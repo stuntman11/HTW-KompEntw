@@ -10,6 +10,6 @@ import java.util.UUID;
 @Transactional
 public interface ProductRepository extends CrudRepository<Product, Long> {
     Product findById(UUID id);
-    List<Product> findAll();
-    Product findTop1ByProductID(UUID id);
+	List<Product> findAll();
+    Product findTop1ByProductId(UUID id);
 }

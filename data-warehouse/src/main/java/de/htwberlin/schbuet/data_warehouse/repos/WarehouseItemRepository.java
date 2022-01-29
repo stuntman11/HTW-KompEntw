@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Transactional
-public interface  WarehouseItemRepository extends CrudRepository<WarehouseItem, Long> {
+public interface WarehouseItemRepository extends CrudRepository<WarehouseItem, Long> {
     WarehouseItem findById(UUID id);
     WarehouseItem findTop1ByProductId(UUID id);
 }

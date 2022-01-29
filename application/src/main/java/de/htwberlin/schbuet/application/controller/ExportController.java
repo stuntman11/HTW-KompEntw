@@ -1,8 +1,10 @@
 package de.htwberlin.schbuet.application.controller;
 
 import de.htwberlin.schbuet.application.service.CsvService;
+
 import org.springframework.web.bind.annotation.*;
 
+@RequestMapping(value = "/api/v1/product")
 @RestController
 public class ExportController {
 
@@ -12,8 +14,8 @@ public class ExportController {
         this.csvService = csvService;
     }
 
-    @GetMapping(value = "/export-product")
+    @GetMapping(value = "/export")
     public void getAdditionalProductInfo() {
-        csvService.exportCsvToFile();
+		csvService.exportCsvToFile();
     }
 }

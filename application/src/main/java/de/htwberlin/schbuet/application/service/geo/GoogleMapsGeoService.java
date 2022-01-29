@@ -1,10 +1,7 @@
 package de.htwberlin.schbuet.application.service.geo;
 
-import java.io.IOException;
-
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
-import com.google.maps.errors.ApiException;
 import com.google.maps.model.AddressComponent;
 import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
@@ -55,7 +52,7 @@ public class GoogleMapsGeoService implements GeoService {
 		
 		try {
 			results = GeocodingApi.geocode(context, address).await();
-		} catch (ApiException | InterruptedException | IOException e) {
+		} catch (Exception e) {
 			log.error("Failed to execute geocode on google maps");
 			throw new GeoServiceException("Failed to execute geocode on google maps", e);
 		}
@@ -71,7 +68,7 @@ public class GoogleMapsGeoService implements GeoService {
 		
 		try {
 			results = GeocodingApi.reverseGeocode(context, location).language(this.language).await();
-		} catch (ApiException | InterruptedException | IOException e) {
+		} catch (Exception e) {
 			log.error("Failed to execute reverse geocode on google maps");
 			throw new GeoServiceException("Failed to execute reverse geocode on google maps", e);
 		}

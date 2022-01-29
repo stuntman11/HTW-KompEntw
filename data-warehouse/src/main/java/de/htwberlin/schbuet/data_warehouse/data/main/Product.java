@@ -23,7 +23,7 @@ public class Product {
     @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
 
-    private UUID productID;
+    private UUID productId;
 
     private String name;
 
@@ -35,7 +35,7 @@ public class Product {
 
     private int priceInCents;
 
-    private int YearOfProduction;
+    private int yearOfProduction;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date importDate;

@@ -1,7 +1,14 @@
 package de.htwberlin.schbuet.application.service;
 
-import de.htwberlin.schbuet.application.data.request.RequestProduct;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import de.htwberlin.schbuet.application.data.main.Product;
+import de.htwberlin.schbuet.application.data.request.RequestProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
 import de.htwberlin.schbuet.application.errors.ResourceNotFoundException;
@@ -10,27 +17,22 @@ import de.htwberlin.schbuet.application.errors.WarehouseResourceNotFoundExceptio
 import de.htwberlin.schbuet.application.repos.ProductRepository;
 import de.htwberlin.schbuet.application.service.geo.GeoCoords;
 import de.htwberlin.schbuet.application.service.geo.GoogleMapsGeoService;
+import de.htwberlin.schbuet.application.service.tax.InternalTaxService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class ProductService {
-    private final InternalCalculatorService calculatorService;
-    private final WarehouseService warehouseService;
-    private final GoogleMapsGeoService googleMapsGeoService;
+    private final InternalTaxService taxCalculator;
+    private final WarehouseService warehouse;
+    private final GoogleMapsGeoService geo;
     private final ProductRepository productRepository;
-
-    public ProductService(InternalCalculatorService calculatorService, WarehouseService warehouseService, GoogleMapsGeoService googleMapsGeoService, ProductRepository productRepository) {
-        this.calculatorService = calculatorService;
-        this.warehouseService = warehouseService;
-        this.googleMapsGeoService = googleMapsGeoService;
+    
+    public ProductService(InternalTaxService taxCalculator, WarehouseService warehouse, GoogleMapsGeoService geo, ProductRepository productRepository) {
+        this.taxCalculator = taxCalculator;
+        this.warehouse = warehouse;
+        this.geo = geo;
         this.productRepository = productRepository;
     }
 
@@ -103,25 +105,25 @@ public class ProductService {
 
     @SneakyThrows()
     private ResponseFullProduct getFullProduct(Product product) {
-        var tax = calculatorService.getTaxForPrice(product.getPriceInCents());
+        var tax = taxCalculator.getTaxForPrice(product.getPriceInCents());
         if (tax == null) {
             log.warn("could not get tax for price");
             throw new TaxCouldNotBeCalculatedException();
         }
 
-        var warehouse = warehouseService.getWarehouseInfoForProduct(product.getId());
-        if (warehouse == null) {
+        var warehouseItem = warehouse.getWarehouseInfoForProduct(product.getId());
+        if (warehouseItem == null) {
             log.warn("There is no warehouse item for the product with uuid " + product.getId());
             throw new WarehouseResourceNotFoundException(product.getId());
         }
 
-        var geoCoordinates = new GeoCoords(warehouse.getLatitude(), warehouse.getLongitude());
-        var address = googleMapsGeoService.getAddressFromCoords(geoCoordinates);
+        var geoCoordinates = new GeoCoords(warehouseItem.getLatitude(), warehouseItem.getLongitude());
+        var address = geo.getAddressFromCoords(geoCoordinates);
 
-        return new ResponseFullProduct(product, tax, address, warehouse);
+        return new ResponseFullProduct(product, tax, address, warehouseItem);
     }
 
     private void saveLocationToWarehouse(RequestProduct requestProduct, UUID productID) {
-        warehouseService.exportWarehouseItem(requestProduct, productID);
+        warehouse.exportWarehouseItem(requestProduct, productID);
     }
 }

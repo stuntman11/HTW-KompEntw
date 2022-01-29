@@ -15,7 +15,7 @@ export class ProductHttpService {
   }
 
   getProductList(): Observable<ProductBasic[] | undefined> {
-    return this.http.get<ProductBasic[]>(environment.api + '/api/v1/product/all');
+    return this.http.get<ProductBasic[]>(environment.api + '/api/v1/product/');
   }
 
   getProductDetail(id: string): Observable<ProductFull | undefined> {
