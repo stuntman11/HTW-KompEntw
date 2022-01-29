@@ -30,7 +30,7 @@ public class RequestProduct {
     private int priceInCents;
 
     @Min(1900)
-    private int YearOfProduction;
+    private int yearOfProduction;
 
     @Positive
     private int quantity;

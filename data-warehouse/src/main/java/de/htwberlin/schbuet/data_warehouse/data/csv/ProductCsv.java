@@ -1,10 +1,10 @@
 package de.htwberlin.schbuet.data_warehouse.data.csv;
 
-import com.opencsv.bean.CsvBindByPosition;
-import lombok.Data;
-import lombok.ToString;
-
 import java.util.UUID;
+
+import com.opencsv.bean.CsvBindByPosition;
+
+import lombok.Data;
 
 @Data
 public class ProductCsv {
@@ -28,7 +28,7 @@ public class ProductCsv {
     private int priceInCents;
 
     @CsvBindByPosition(position = 6)
-    private int YearOfProduction;
+    private int yearOfProduction;
 
     public UUID getIdAsUUID() {
         return UUID.fromString(id);

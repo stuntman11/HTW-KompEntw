@@ -38,7 +38,7 @@ public class ImportService {
             var list = parseService.parseProductInputStream(inputStream);
 
             for (ProductCsv csv : list) {
-                var item = productRepository.findTop1ByProductID(csv.getIdAsUUID());
+                var item = productRepository.findTop1ByProductId(csv.getIdAsUUID());
                 if (item == null) {
                     Product product = new Product();
                     product.setImportDate(new Date());
