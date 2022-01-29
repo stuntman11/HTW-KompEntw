@@ -12,9 +12,19 @@ spring:
         - id: calculator
           uri: http://127.0.0.1:3000
           predicates:
-            - Path=/calculator/tax, /calculator/tax-with-rate
+            - Path=/api/tax, /api/tax-with-rate
           filters:
-            - RewritePath=/calculator/(?<segment>.*), /$\{segment}
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+
+        - id: api
+          uri: http://127.0.0.1:8088
+          predicates:
+            - Path=/api/**
+
+        - id: frontend
+          uri: http://127.0.0.1:4200
+          predicates:
+            - Path=/**
 
 server:
-  port: 8080
+  port: 80

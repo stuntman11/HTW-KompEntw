@@ -13,8 +13,14 @@ spring:
     password: application
     driverClassName: org.h2.Driver
 
+springdoc:
+  api-docs:
+    path: /api/openapi
+  swagger-ui:
+    path: /api/swagger-ui
+
 geo:
-  apikey: "0123457"
+  apikey: ""
   language: "de-DE"
 
 server:
