@@ -20,28 +20,31 @@ public class CsvService {
     public CsvService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
-
-    public CSVWriter getAllProductAsCSV() {
-        var all = productRepository.findAll();
-        StringWriter sw = new StringWriter();
-        CSVWriter csvWriter = new CSVWriter(sw);
-        for (Product product : all) {
-            String[] rowData = {
-                    product.getId().toString(),
-                    product.getName(),
-                    product.getDescription(),
-                    product.getCategory(),
-                    product.getItemNumber(),
-                    String.valueOf(product.getPriceInCents()),
-                    String.valueOf(product.getYearOfProduction())
-            };
-            csvWriter.writeNext(rowData);
+    
+    @SneakyThrows
+    public void exportCsvToFile() {
+        try (FileWriter file = new FileWriter("export-products.csv")) {
+            file.write(getAllProductsAsCsv());
+            log.info("export-products.csv was created");
         }
-        return csvWriter;
+    }
+    
+    @SneakyThrows
+    public String getAllProductsAsCsv() {
+        var allProducts = productRepository.findAll();
+        StringWriter sw = new StringWriter();
+        
+        try (CSVWriter csvWriter = new CSVWriter(sw)) {
+            for (Product product : allProducts) {
+                String[] csvRow = exportProductToCsvRow(product);
+                csvWriter.writeNext(csvRow);
+            }
+        }
+        return sw.toString();
     }
 
-    public CSVWriter getWarehouseExportItem(UUID id, int quantity, int deliveryTimeInDays, Double latitude, Double longitude) {
-        var all = productRepository.findAll();
+    public String getWarehouseExportItem(UUID id, int quantity, int deliveryTimeInDays, Double latitude, Double longitude) {
+        var all = productRepository.findById(id);
         StringWriter sw = new StringWriter();
         CSVWriter csvWriter = new CSVWriter(sw);
 
@@ -54,14 +57,18 @@ public class CsvService {
 
         csvWriter.writeNext(rowData);
 
-        return csvWriter;
+        return csvWriter.toString();
     }
-
-    @SneakyThrows
-    public void exportCsvToFile(){
-        FileWriter myWriter = new FileWriter("export-products.csv");
-        myWriter.write(this.getAllProductAsCSV().toString());
-        myWriter.close();
-        log.info("export-products.csv was created");
+    
+    private String[] exportProductToCsvRow(Product product) {
+    	return new String[] {
+            product.getId().toString(),
+            product.getName(),
+            product.getDescription(),
+            product.getCategory(),
+            product.getItemNumber(),
+            String.valueOf(product.getPriceInCents()),
+            String.valueOf(product.getYearOfProduction())
+        };
     }
 }

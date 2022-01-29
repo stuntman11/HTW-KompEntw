@@ -24,38 +24,38 @@ import java.util.UUID;
 @Validated
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductService products;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    public ProductController(ProductService products) {
+        this.products = products;
+    }
+
+    @GetMapping(value = "/")
+    public List<ResponseBasicProduct> getBasicProductList() {
+        return products.getAllProducts();
     }
 
     @GetMapping(value = "/{uuid}")
     public ResponseFullProduct getFullProductInfo(@PathVariable @NotNull UUID uuid) {
-        return productService.getDetailedProductInfo(uuid);
-    }
-
-    @GetMapping(value = "/all")
-    public List<ResponseBasicProduct> getBasicProductList() {
-        return productService.getAllProducts();
+        return products.getDetailedProductInfo(uuid);
     }
 
     //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
     @DeleteMapping(value = "/{uuid}")
     public void deleteProduct(@PathVariable @NotNull UUID uuid) {
-        productService.deleteProduct(uuid);
+        products.deleteProduct(uuid);
     }
 
     //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
     @PostMapping(value = "/")
     public UUID createProduct(@Valid @RequestBody RequestProduct body) {
-        return productService.createProduct(body);
+        return products.createProduct(body);
     }
 
     //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
     @PutMapping(value = "/{uuid}")
     public void updateProduct(@Valid @RequestBody RequestProduct body, @PathVariable @NotNull UUID uuid) {
-        productService.updateProduct(body, uuid);
+        products.updateProduct(body, uuid);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -76,8 +76,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
