@@ -12,9 +12,10 @@ import {HomeComponent} from './components/home/home.component';
 import {RouterModule, Routes} from "@angular/router";
 import {AdminProductComponent} from './components/admin-product/admin-product.component';
 import {HttpClientModule} from "@angular/common/http";
-import { LoaderComponent } from './components/loader/loader.component';
+import {LoaderComponent} from './components/loader/loader.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule} from "@angular/forms";
+import {CentToEuroPipe} from './pipes/cent-to-euro.pipe';
 
 const routes: Routes = [
   {path: 'shop', component: HomeComponent},
@@ -53,7 +54,8 @@ const routes: Routes = [
     ProductDetailsComponent,
     HomeComponent,
     AdminProductComponent,
-    LoaderComponent
+    LoaderComponent,
+    CentToEuroPipe
   ],
   imports: [
     BrowserModule,

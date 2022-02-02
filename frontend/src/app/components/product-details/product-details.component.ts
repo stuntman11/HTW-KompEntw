@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ProductHttpService} from "../../services/product-http.service";
 import {ProductFull} from "../../models/product-full";
+import {Tax} from "../../models/tax";
+import {TaxHttpService} from "../../services/tax-http.service";
 
 @Component({
   selector: 'app-product-details',
@@ -11,13 +13,12 @@ import {ProductFull} from "../../models/product-full";
 export class ProductDetailsComponent implements OnInit {
 
   id: string = 'new';
-  new: boolean;
 
-  selectedProduct: ProductFull | undefined
+  product: ProductFull | undefined
+  tax: Tax | undefined
 
-  constructor(private route: ActivatedRoute, private productHttpService: ProductHttpService) {
+  constructor(private route: ActivatedRoute, private productHttpService: ProductHttpService, private taxHttpService: TaxHttpService) {
     this.route.params.subscribe(params => this.id = params['id']);
-    this.new = this.id === 'new';
   }
 
   ngOnInit(): void {
@@ -29,7 +30,20 @@ export class ProductDetailsComponent implements OnInit {
   getProductInfo() {
     this.productHttpService.getProductDetail(this.id).subscribe(
       (data) => {
-        this.selectedProduct = data;
+        this.product = data;
+        if (this.product) {
+          this.getTax(this.product.price.basePrice)
+        }
+      },
+      (error: any) => {
+        console.log(error)
+      });
+  }
+
+  getTax(value: number) {
+    this.taxHttpService.getTax(value).subscribe(
+      (data) => {
+        this.tax = data;
       },
       (error: any) => {
         console.log(error)
