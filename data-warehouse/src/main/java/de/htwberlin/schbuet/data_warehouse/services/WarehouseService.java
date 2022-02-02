@@ -22,12 +22,12 @@ public class WarehouseService {
     }
 
     public WarehouseItem getWarehouseItemByUUID(UUID uuid) {
-        return warehouseItemRepository.findById(uuid);
+        return warehouseItemRepository.findTop1ByProductId(uuid);
     }
 
     @SneakyThrows
     public void deleteWarehouseItem(UUID uuid) {
-        var item = warehouseItemRepository.findById(uuid);
+        var item = this.getWarehouseItemByUUID(uuid);
         if (item == null) {
             log.warn("could not find a warehouse item with id " + uuid);
             throw new ResourceNotFoundException(uuid);
@@ -35,7 +35,7 @@ public class WarehouseService {
     }
 
     public UUID createOrUpdateWarehouseItem(RequestWarehouseItem requestItem) {
-        var item = warehouseItemRepository.findById(requestItem.getProductId());
+        var item = this.getWarehouseItemByUUID(requestItem.getProductId());
         if (item == null) {
             log.info("no warehouse item found for product id" + requestItem.getProductId());
             return this.createWarehouseItem(requestItem);

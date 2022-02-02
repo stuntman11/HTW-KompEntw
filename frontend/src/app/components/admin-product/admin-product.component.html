@@ -1,1 +1,157 @@
-<p>admin-product works!</p>
+<div class="container">
+  <h4 class="mt-4">Product administration:</h4>
+  <button (click)="openModal()" class="btn btn-sm btn-primary me-3">New product</button>
+  <button (click)="exportProducts()" class="btn btn-sm btn-outline-danger mx-3">Export CSV</button>
+  <button (click)="importProducts()" class="btn btn-sm btn-outline-danger me-3">Import CSV</button>
+
+  <h5 class="mt-4">Available products:</h5>
+  <table *ngIf="products && products.length > 0" class="table table-sm table-hover">
+    <thead>
+    <tr>
+      <th>System-ID</th>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Description</th>
+      <th>Date</th>
+      <th>Item number</th>
+      <th>Year</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr (click)="openEditModal(product)" *ngFor="let product of products">
+      <td>{{product.id}}</td>
+      <td>{{product.name}}</td>
+      <td>{{product.category}}</td>
+      <td>{{product.description}}</td>
+      <td>{{product.createdDate | date:'dd.MM.yyyy HH:mm'}}</td>
+      <td>{{product.itemNumber}}</td>
+      <td>{{product.yearOfProduction}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <app-loader *ngIf="!products"></app-loader>
+  <span *ngIf="products && products.length === 0">No products available</span>
+</div>
+
+
+<ng-template #ngModal let-modal>
+  <div class="modal-header pb-2 pt-2">
+    <h5 class="modal-title">
+      <span *ngIf="!edit">New product</span>
+      <span *ngIf="edit">Edit product</span>
+    </h5>
+  </div>
+  <div class="modal-body p-3">
+    <div *ngIf="!loading && selected" class="row">
+
+      <div class="col-12">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input [(ngModel)]="selected.name" class="form-control form-control-sm" id="name" type="text">
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input [(ngModel)]="selected.description" class="form-control form-control-sm" id="description" type="text">
+        </div>
+      </div>
+
+      <!-- Dont use in frontend hardcoded categories in a real application-->
+      <div class="col-12">
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select [(ngModel)]="selected.category" class="form-select form-select-sm" id="category">
+            <option selected value="Demo">Demo</option>
+            <option value="Specials">Specials</option>
+            <option value="Category #1">Category #1</option>
+            <option value="Category #2">Category #2</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-group">
+          <label for="itemNumber">Item number</label>
+          <input [(ngModel)]="selected.itemNumber" class="form-control form-control-sm" id="itemNumber" type="text">
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="form-group">
+          <label for="quantity">Quantity</label>
+          <input [(ngModel)]="selected.quantity" class="form-control form-control-sm" id="quantity" min="1" type="number">
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="form-group">
+          <label for="priceInCents">Price in cents</label>
+          <input [(ngModel)]="selected.priceInCents" class="form-control form-control-sm" id="priceInCents" min="1" type="number">
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="form-group">
+          <label for="deliveryTimeInDays">Delivery days</label>
+          <input [(ngModel)]="selected.deliveryTimeInDays" class="form-control form-control-sm" id="deliveryTimeInDays" min="1" type="number">
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="form-group">
+          <label for="quantity">Production year</label>
+          <input [(ngModel)]="selected.yearOfProduction" class="form-control form-control-sm" id="yearOfProduction" min="1900" type="number">
+        </div>
+      </div>
+      <hr class="my-3">
+      <div class="col-12">
+        <div class="form-group">
+          <label for="city">City</label>
+          <input [(ngModel)]="selected.address.city" class="form-control form-control-sm" id="city" type="text">
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label for="postalCode">Postal Code</label>
+          <input [(ngModel)]="selected.address.postalCode" class="form-control form-control-sm" id="postalCode" type="text">
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label for="street">Street</label>
+          <input [(ngModel)]="selected.address.street" class="form-control form-control-sm" id="street" type="text">
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label for="country">Country</label>
+          <select [(ngModel)]="selected.address.country" class="form-select form-select-sm" id="country">
+            <option selected value="Deutschland">Germany</option>
+            <option value="Österreich">Austria</option>
+            <option value="Schweiz">Switzerland</option>
+            <option value="Liechtenstein">Liechtenstein</option>
+          </select>
+        </div>
+      </div>
+      <hr class="my-3">
+
+    </div>
+    <app-loader *ngIf="loading || !selected"></app-loader>
+    <button (click)="selectDemo(0)" class="btn btn-sm btn-outline-primary me-2">Demo 1</button>
+    <button (click)="selectDemo(1)" class="btn btn-sm btn-outline-primary me-2">Demo 2</button>
+    <button (click)="selectDemo(2)" class="btn btn-sm btn-outline-primary me-2">Demo 3</button>
+  </div>
+  <div class="modal-footer pb-2 pt-2">
+    <button (click)="createItem()" *ngIf="!edit && selected"
+            [attr.disabled]="(selected.name.length > 1) ? null: true"
+            class="btn btn-success btn-success btn-sm">Create
+    </button>
+    <button (click)="updateItem()" *ngIf="edit && selected"
+            [attr.disabled]="(selected.name.length > 1) ? null: true"
+            class="btn btn-success btn-success btn-sm">Save
+    </button>
+    <button (click)="closeModal()" class="btn btn-secondary btn-sm" type="button">Close</button>
+  </div>
+</ng-template>

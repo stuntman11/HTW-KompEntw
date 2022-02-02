@@ -1,1 +1,66 @@
-<p>product-details works!</p>
+<div class="container py-3">
+  <button [routerLink]="'/shop'" class="btn btn-sm btn-primary my-3">Back to all products</button>
+  <ng-container *ngIf="product">
+    <div class="row">
+      <div class="col-auto">
+        <img alt="..." src="https://dummyimage.com/300/dee2e6/6c757d&text=Image!">
+      </div>
+      <div class="col">
+        <h3>{{product.name}}</h3>
+        <p><span class="badge bg-danger">Bestseller in category: {{product.category}}</span></p>
+
+        <div class="row">
+          <div *ngIf="tax" class="col-12 pb-3">
+            <h6>
+              <del>{{(tax.priceWithTax * 1.2) | centToEuro}}</del>
+            </h6>
+            <h2 *ngIf="tax" class="fw-bold text-danger d-inline-block me-3">{{tax.priceWithTax | centToEuro}}</h2>
+            <small class="text-secondary d-inline-block">(includes {{tax.includedTax | centToEuro}} VAT at {{tax.taxRate * 100}}%)</small>
+          </div>
+          <div class="col-4">
+            <label class="text-secondary d-block">Shipment</label>
+            <span class="fw-bolder">{{product.deliveryTimeInDays}} days</span>
+          </div>
+          <div class="col-4">
+            <label class="text-secondary d-block">In Stock</label>
+            <span class="fw-bolder">{{product.quantity}} left</span>
+          </div>
+          <div class="col-4">
+            <button class="btn btn-danger disabled">Add to card</button>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-4">
+            <label class="text-secondary d-block">Product-ID</label>
+            <span class="fw-bolder">{{product.itemNumber}}</span>
+          </div>
+          <div class="col-4">
+            <label class="text-secondary d-block">Year</label>
+            <span class="fw-bolder">{{product.yearOfProduction}}</span>
+          </div>
+          <div class="col-4">
+            <label class="text-secondary d-block">Listed since</label>
+            <span class="fw-bolder">{{product.createdDate | date:'dd.MM.yyyy'}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="my-5">
+    <div class="row">
+      <div class="col-3">
+        <label class="text-secondary d-block">Product location</label>
+        <span class="fw-bolder d-block">{{product.address.street}}</span>
+        <span class="fw-bolder d-block">{{product.address.postalCode}}</span>
+        <span class="fw-bolder d-block">{{product.address.city}}</span>
+        <span class="fw-bolder d-block">{{product.address.country}}</span>
+      </div>
+      <div class="col-9">
+        <label class="text-secondary d-block">Product description</label>
+        <span class="fw-bolder">{{product.description}}</span>
+      </div>
+
+    </div>
+  </ng-container>
+  <app-loader *ngIf="!product"></app-loader>
+</div>

@@ -43,23 +43,6 @@ public class CsvService {
         return sw.toString();
     }
 
-    public String getWarehouseExportItem(UUID id, int quantity, int deliveryTimeInDays, Double latitude, Double longitude) {
-        var all = productRepository.findById(id);
-        StringWriter sw = new StringWriter();
-        CSVWriter csvWriter = new CSVWriter(sw);
-
-        String[] rowData = {
-                id.toString(),
-                String.valueOf(quantity),
-                String.valueOf(deliveryTimeInDays),
-                String.valueOf(latitude),
-                String.valueOf(longitude)};
-
-        csvWriter.writeNext(rowData);
-
-        return csvWriter.toString();
-    }
-    
     private String[] exportProductToCsvRow(Product product) {
     	return new String[] {
             product.getId().toString(),
