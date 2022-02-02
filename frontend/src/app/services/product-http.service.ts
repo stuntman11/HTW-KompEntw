@@ -31,7 +31,7 @@ export class ProductHttpService {
   putProduct(body: BodyProduct, id: string): Observable<string> {
     const headers = new HttpHeaders()
       .append('Content-Type', 'application/json');
-    return this.http.post<string>(environment.api + '/api/v1/product/' + id, body, {headers});
+    return this.http.put<string>(environment.api + '/api/v1/product/' + id, body, {headers});
   }
 
   deleteProduct(id: string): Observable<string> {

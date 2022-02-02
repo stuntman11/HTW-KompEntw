@@ -12,6 +12,9 @@ import {HomeComponent} from './components/home/home.component';
 import {RouterModule, Routes} from "@angular/router";
 import {AdminProductComponent} from './components/admin-product/admin-product.component';
 import {HttpClientModule} from "@angular/common/http";
+import { LoaderComponent } from './components/loader/loader.component';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {FormsModule} from "@angular/forms";
 
 const routes: Routes = [
   {path: 'shop', component: HomeComponent},
@@ -49,15 +52,18 @@ const routes: Routes = [
     ProductCardComponent,
     ProductDetailsComponent,
     HomeComponent,
-    AdminProductComponent
+    AdminProductComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    NgbModule,
     RouterModule.forRoot(
       routes,
       {enableTracing: false, relativeLinkResolution: 'legacy'}
     ),
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

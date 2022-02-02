@@ -1,6 +1,5 @@
 package de.htwberlin.schbuet.application.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,29 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class WarehouseService {
-	
-    private final CsvService csvService;
+
     private final GoogleMapsGeoService geo;
     private final RestTemplate rest;
 
-    public WarehouseService(CsvService csvService, GoogleMapsGeoService geo) {
-        this.csvService = csvService;
+    public WarehouseService(GoogleMapsGeoService geo) {
         this.geo = geo;
         
         this.rest = new RestTemplateBuilder()
         		.rootUri("http://localhost:8090")
         		.build();
-    }
-
-    public void exportWarehouseItemAsCSV(UUID id, int quantity, int deliveryTimeInDays, Double latitude, Double longitude) {
-        HashMap<String, Object> form = new HashMap<>();
-        form.put("csvFile", csvService.getWarehouseExportItem(id, quantity, deliveryTimeInDays, latitude, longitude));
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        rest.postForEntity("/export-product", new HttpEntity<>(form, headers), String.class);
-
-        log.info("Products were exported as CSV");
     }
 
     @SneakyThrows
@@ -74,7 +60,7 @@ public class WarehouseService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        rest.postForEntity("/product-info", new HttpEntity<>(requestWarehouseItem, headers), String.class);
+        rest.postForEntity("/product-info/", new HttpEntity<>(requestWarehouseItem, headers), String.class);
 
         log.info("Warehouse item was posted to warehouse");
     }

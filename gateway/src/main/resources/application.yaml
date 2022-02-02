@@ -6,8 +6,14 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
-            allowedMethods: "*"
+            allowedOrigins: "http://localhost:4200"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTIONS
       routes:
         - id: calculator
           uri: http://127.0.0.1:3000
@@ -16,15 +22,16 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*), /$\{segment}
 
+        - id: import
+          uri: http://127.0.0.1:8090
+          predicates:
+            - Path=/import-products
+
         - id: api
           uri: http://127.0.0.1:8088
           predicates:
             - Path=/api/**
 
-        - id: frontend
-          uri: http://127.0.0.1:4200
-          predicates:
-            - Path=/**
 
 server:
-  port: 80
+  port: 8080
