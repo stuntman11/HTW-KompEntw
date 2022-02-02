@@ -14,7 +14,7 @@ export class ProductService {
     if (full !== undefined) {
       let body = new BodyProduct();
       body.name = full.name;
-      body.description = full.name;
+      body.description = full.description;
       body.address = full.address;
       body.deliveryTimeInDays = full.deliveryTimeInDays;
       body.category = full.category;
