@@ -1,4 +1,4 @@
-package de.htwberlin.schbuet.application.service.geo;
+package de.htwberlin.schbuet.application.data.geo;
 
 import lombok.Getter;
 import lombok.ToString;

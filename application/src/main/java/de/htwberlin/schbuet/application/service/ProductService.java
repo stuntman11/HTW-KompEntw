@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import de.htwberlin.schbuet.application.data.geo.GeoCoords;
 import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.data.request.RequestProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
@@ -15,8 +16,7 @@ import de.htwberlin.schbuet.application.errors.ResourceNotFoundException;
 import de.htwberlin.schbuet.application.errors.TaxCouldNotBeCalculatedException;
 import de.htwberlin.schbuet.application.errors.WarehouseResourceNotFoundException;
 import de.htwberlin.schbuet.application.repos.ProductRepository;
-import de.htwberlin.schbuet.application.service.geo.GeoCoords;
-import de.htwberlin.schbuet.application.service.geo.GoogleMapsGeoService;
+import de.htwberlin.schbuet.application.service.geo.GeoService;
 import de.htwberlin.schbuet.application.service.tax.InternalTaxService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductService {
     private final InternalTaxService taxCalculator;
     private final WarehouseService warehouse;
-    private final GoogleMapsGeoService geo;
+    private final GeoService geo;
     private final ProductRepository productRepository;
     
-    public ProductService(InternalTaxService taxCalculator, WarehouseService warehouse, GoogleMapsGeoService geo, ProductRepository productRepository) {
+    public ProductService(InternalTaxService taxCalculator, WarehouseService warehouse, GeoService geo, ProductRepository productRepository) {
         this.taxCalculator = taxCalculator;
         this.warehouse = warehouse;
         this.geo = geo;

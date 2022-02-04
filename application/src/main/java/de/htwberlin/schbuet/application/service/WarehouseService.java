@@ -14,7 +14,7 @@ import de.htwberlin.schbuet.application.data.request.RequestProduct;
 import de.htwberlin.schbuet.application.data.request.RequestStockItem;
 import de.htwberlin.schbuet.application.data.response.ResponseStockItem;
 import de.htwberlin.schbuet.application.errors.GeoLookupException;
-import de.htwberlin.schbuet.application.service.geo.GoogleMapsGeoService;
+import de.htwberlin.schbuet.application.service.geo.GeoService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,10 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WarehouseService {
 	
-    private final GoogleMapsGeoService geo;
+    private final GeoService geo;
     private final RestTemplate rest;
 
-    public WarehouseService(GoogleMapsGeoService geo) {
+    public WarehouseService(GeoService geo) {
         this.geo = geo;
         this.rest = new RestTemplateBuilder()
         		.rootUri("http://localhost:8090")

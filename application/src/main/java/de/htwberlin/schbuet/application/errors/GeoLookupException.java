@@ -1,17 +1,17 @@
 package de.htwberlin.schbuet.application.errors;
 
-public class GeoServiceException extends Exception {
+public class GeoLookupException extends Exception {
 	private static final long serialVersionUID = 462844803647170540L;
 	
-	public GeoServiceException() {
+	public GeoLookupException() {
 		super("Geo service returned no results for the specified address");
 	}
 
-	public GeoServiceException(String msg) {
+	public GeoLookupException(String msg) {
 		super(msg);
 	}
 	
-	public GeoServiceException(String msg, Throwable inner) {
+	public GeoLookupException(String msg, Throwable inner) {
 		super(msg, inner);
 	}
 }
