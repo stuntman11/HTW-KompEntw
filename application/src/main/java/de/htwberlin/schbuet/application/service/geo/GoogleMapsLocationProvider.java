@@ -1,5 +1,7 @@
 package de.htwberlin.schbuet.application.service.geo;
 
+import org.springframework.stereotype.Component;
+
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.AddressComponent;
@@ -7,20 +9,22 @@ import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 
+import de.htwberlin.schbuet.application.configs.GoogleMapsConfig;
 import de.htwberlin.schbuet.application.data.geo.GeoAddress;
 import de.htwberlin.schbuet.application.data.geo.GeoCoords;
 import de.htwberlin.schbuet.application.errors.GeoLookupException;
 import lombok.extern.slf4j.Slf4j;
 
+@Component
 @Slf4j
 public class GoogleMapsLocationProvider implements GeoLocationProvider {
+	private final GoogleMapsConfig config;
 	private final GeoApiContext context;
-	private final String language;
 
-	public GoogleMapsLocationProvider(String apiKey, String language) {
-		this.language = language;
+	public GoogleMapsLocationProvider(GoogleMapsConfig config) {
+		this.config = config;
 		this.context = new GeoApiContext.Builder()
-			.apiKey(apiKey)
+			.apiKey(config.getApiKey())
 			.disableRetries()
 			.build();
 	}
@@ -66,7 +70,9 @@ public class GoogleMapsLocationProvider implements GeoLocationProvider {
 		GeocodingResult[] results;
 		
 		try {
-			results = GeocodingApi.reverseGeocode(context, location).language(this.language).await();
+			results = GeocodingApi.reverseGeocode(context, location)
+					.language(config.getApiKey())
+					.await();
 		} catch (Exception e) {
 			log.error("Failed to execute reverse geocode on google maps");
 			throw new GeoLookupException("Failed to execute reverse geocode on google maps", e);

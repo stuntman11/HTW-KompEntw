@@ -2,24 +2,39 @@ package de.htwberlin.schbuet.application.service.geo;
 
 import org.springframework.stereotype.Service;
 
-import de.htwberlin.schbuet.application.configs.GoogleMapsConfig;
 import de.htwberlin.schbuet.application.data.geo.GeoAddress;
 import de.htwberlin.schbuet.application.data.geo.GeoCoords;
 import de.htwberlin.schbuet.application.errors.GeoLookupException;
 
 @Service
 public class GeoService {
-	private GeoLocationProvider location;
-	
-	public GeoService(GoogleMapsConfig googleConfig) {
-		this.location = new GoogleMapsLocationProvider(googleConfig.getApiKey(), googleConfig.getLanguage());
+	private GoogleMapsLocationProvider location;
+	private RedisLocationCache locationCache;
+
+	public GeoService(GoogleMapsLocationProvider location, RedisLocationCache locationCache) {
+		this.location = location;
+		this.locationCache = locationCache;
 	}
-	
+
 	public GeoCoords getCoordsFromAddress(GeoAddress address) throws GeoLookupException {
-		return location.getCoordsFromAddress(address);
+		GeoCoords coords = locationCache.findCoords(address);
+
+		if (coords != null) {
+			return coords;
+		}
+		coords = location.getCoordsFromAddress(address);
+		locationCache.cacheAddressToCoords(address, coords);
+		return coords;
 	}
-	
+
 	public GeoAddress getAddressFromCoords(GeoCoords coords) throws GeoLookupException {
-		return location.getAddressFromCoords(coords);
+		GeoAddress address = locationCache.findAddress(coords);
+
+		if (address != null) {
+			return address;
+		}
+		address = location.getAddressFromCoords(coords);
+		locationCache.cacheCoordsToAddress(coords, address);
+		return address;
 	}
 }
