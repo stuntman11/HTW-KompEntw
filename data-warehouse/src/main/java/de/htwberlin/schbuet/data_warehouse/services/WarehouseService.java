@@ -1,9 +1,9 @@
 package de.htwberlin.schbuet.data_warehouse.services;
 
-import de.htwberlin.schbuet.data_warehouse.data.request.RequestWarehouseItem;
-import de.htwberlin.schbuet.data_warehouse.data.main.WarehouseItem;
+import de.htwberlin.schbuet.data_warehouse.data.request.RequestStockItem;
+import de.htwberlin.schbuet.data_warehouse.data.main.StockItem;
 import de.htwberlin.schbuet.data_warehouse.errors.ResourceNotFoundException;
-import de.htwberlin.schbuet.data_warehouse.repos.WarehouseItemRepository;
+import de.htwberlin.schbuet.data_warehouse.repos.StockItemRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,38 +15,38 @@ import java.util.UUID;
 @Slf4j
 public class WarehouseService {
 
-    private final WarehouseItemRepository warehouseItemRepository;
+    private final StockItemRepository stockItemRepository;
 
-    public WarehouseService(WarehouseItemRepository warehouseItemRepository) {
-        this.warehouseItemRepository = warehouseItemRepository;
+    public WarehouseService(StockItemRepository stockItemRepository) {
+        this.stockItemRepository = stockItemRepository;
     }
 
-    public WarehouseItem getWarehouseItemByUUID(UUID uuid) {
-        return warehouseItemRepository.findTop1ByProductId(uuid);
+    public StockItem getStockItemByUUID(UUID uuid) {
+        return stockItemRepository.findTop1ByProductId(uuid);
     }
 
     @SneakyThrows
-    public void deleteWarehouseItem(UUID uuid) {
-        var item = this.getWarehouseItemByUUID(uuid);
-        if (item == null) {
-            log.warn("could not find a warehouse item with id " + uuid);
+    public void deleteStockItem(UUID uuid) {
+        var stock = this.getStockItemByUUID(uuid);
+        if (stock == null) {
+            log.warn("could not find a stock item with id " + uuid);
             throw new ResourceNotFoundException(uuid);
         }
     }
 
-    public UUID createOrUpdateWarehouseItem(RequestWarehouseItem requestItem) {
-        var item = this.getWarehouseItemByUUID(requestItem.getProductId());
+    public UUID createOrUpdateStockItem(RequestStockItem requestItem) {
+        var item = this.getStockItemByUUID(requestItem.getProductId());
         if (item == null) {
-            log.info("no warehouse item found for product id" + requestItem.getProductId());
-            return this.createWarehouseItem(requestItem);
+            log.info("no stock item found for product id " + requestItem.getProductId());
+            return this.createStockItem(requestItem);
         } else {
-            log.info("warehouse item found for product id" + requestItem.getProductId());
-            return this.updateWarehouseItem(item);
+            log.info("stock item found for product id " + requestItem.getProductId());
+            return this.updateStockItem(item);
         }
     }
 
-    public UUID createWarehouseItem(RequestWarehouseItem requestItem) {
-        var warehouseItem = WarehouseItem.builder()
+    public UUID createStockItem(RequestStockItem requestItem) {
+        var stockItem = StockItem.builder()
                 .productId(requestItem.getProductId())
                 .quantity(requestItem.getQuantity())
                 .deliveryTimeInDays(requestItem.getDeliveryTimeInDays())
@@ -56,20 +56,20 @@ public class WarehouseService {
                 .dateLastUpdate(Calendar.getInstance().getTime())
                 .build();
 
-        var savedItem = warehouseItemRepository.save(warehouseItem);
-        log.info("New warehouse item for product " + requestItem.getProductId() + " was created. ID:" + savedItem.getId());
-        return savedItem.getId();
+        stockItem = stockItemRepository.save(stockItem);
+        log.info("New stock item for product " + requestItem.getProductId() + " was created. ID:" + stockItem.getId());
+        return stockItem.getId();
     }
 
-    public UUID updateWarehouseItem(WarehouseItem warehouseItem) {
-        warehouseItem.setQuantity(warehouseItem.getQuantity());
-        warehouseItem.setDeliveryTimeInDays(warehouseItem.getDeliveryTimeInDays());
-        warehouseItem.setLatitude(warehouseItem.getLatitude());
-        warehouseItem.setLongitude(warehouseItem.getLongitude());
-        warehouseItem.setDateLastUpdate(Calendar.getInstance().getTime());
+    public UUID updateStockItem(StockItem stock) {
+        stock.setQuantity(stock.getQuantity());
+        stock.setDeliveryTimeInDays(stock.getDeliveryTimeInDays());
+        stock.setLatitude(stock.getLatitude());
+        stock.setLongitude(stock.getLongitude());
+        stock.setDateLastUpdate(Calendar.getInstance().getTime());
 
-        warehouseItemRepository.save(warehouseItem);
-        log.info("Warehouse item was updated. ID:" + warehouseItem.getId());
-        return warehouseItem.getId();
+        stockItemRepository.save(stock);
+        log.info("stock item was updated. ID:" + stock.getId());
+        return stock.getId();
     }
 }

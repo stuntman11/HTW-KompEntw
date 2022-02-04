@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class RequestWarehouseItem {
+public class RequestStockItem {
     private UUID productId;
     private int quantity;
     private int deliveryTimeInDays;

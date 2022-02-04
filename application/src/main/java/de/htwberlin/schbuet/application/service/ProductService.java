@@ -64,10 +64,10 @@ public class ProductService {
                 .createdDate(Calendar.getInstance().getTime())
                 .build();
 
-        var savedProduct = productRepository.save(product);
-        this.saveLocationToWarehouse(requestProduct, savedProduct.getId());
-        log.info("New product was created. ID:" + savedProduct.getId());
-        return savedProduct.getId();
+        product = productRepository.save(product);
+        warehouse.createStockItem(requestProduct, product.getId());
+        log.info("New product was created. ID:" + product.getId());
+        return product.getId();
     }
 
     @SneakyThrows()
@@ -87,7 +87,7 @@ public class ProductService {
 
         productRepository.save(product);
 
-        this.saveLocationToWarehouse(requestProduct, product.getId());
+        warehouse.createStockItem(requestProduct, product.getId());
         log.info("Product was updated. ID:" + product.getId());
     }
 
@@ -111,19 +111,15 @@ public class ProductService {
             throw new TaxCouldNotBeCalculatedException();
         }
 
-        var warehouseItem = warehouse.getWarehouseInfoForProduct(product.getId());
-        if (warehouseItem == null) {
-            log.warn("There is no warehouse item for the product with uuid " + product.getId());
+        var stockItem = warehouse.getStockItemForProduct(product.getId());
+        if (stockItem == null) {
+            log.warn("There is no stock item for the product with uuid " + product.getId());
             throw new WarehouseResourceNotFoundException(product.getId());
         }
 
-        var geoCoordinates = new GeoCoords(warehouseItem.getLatitude(), warehouseItem.getLongitude());
+        var geoCoordinates = new GeoCoords(stockItem.getLatitude(), stockItem.getLongitude());
         var address = geo.getAddressFromCoords(geoCoordinates);
 
-        return new ResponseFullProduct(product, tax, address, warehouseItem);
-    }
-
-    private void saveLocationToWarehouse(RequestProduct requestProduct, UUID productID) {
-        warehouse.exportWarehouseItem(requestProduct, productID);
+        return new ResponseFullProduct(product, tax, address, stockItem);
     }
 }
