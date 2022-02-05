@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -32,6 +33,7 @@ public class WarehouseService {
             log.warn("could not find a stock item with id " + uuid);
             throw new ResourceNotFoundException(uuid);
         }
+        stockItemRepository.delete(stock);
     }
 
     public UUID createOrUpdateStockItem(RequestStockItem requestItem) {
@@ -41,8 +43,12 @@ public class WarehouseService {
             return this.createStockItem(requestItem);
         } else {
             log.info("stock item found for product id " + requestItem.getProductId());
-            return this.updateStockItem(item);
+            return this.updateStockItem(item, requestItem);
         }
+    }
+
+    public List<StockItem> getAllSockItems() {
+        return stockItemRepository.findAll();
     }
 
     public UUID createStockItem(RequestStockItem requestItem) {
@@ -61,11 +67,11 @@ public class WarehouseService {
         return stockItem.getId();
     }
 
-    public UUID updateStockItem(StockItem stock) {
-        stock.setQuantity(stock.getQuantity());
-        stock.setDeliveryTimeInDays(stock.getDeliveryTimeInDays());
-        stock.setLatitude(stock.getLatitude());
-        stock.setLongitude(stock.getLongitude());
+    public UUID updateStockItem(StockItem stock, RequestStockItem request) {
+        stock.setQuantity(request.getQuantity());
+        stock.setDeliveryTimeInDays(request.getDeliveryTimeInDays());
+        stock.setLatitude(request.getLatitude());
+        stock.setLongitude(request.getLongitude());
         stock.setDateLastUpdate(Calendar.getInstance().getTime());
 
         stockItemRepository.save(stock);
