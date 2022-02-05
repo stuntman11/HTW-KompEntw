@@ -1,33 +1,36 @@
 package de.htwberlin.schbuet.application.service.geo;
 
+import org.springframework.stereotype.Component;
+
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.AddressComponent;
 import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
-import de.htwberlin.schbuet.application.errors.GeoServiceException;
+
+import de.htwberlin.schbuet.application.configs.GoogleMapsConfig;
+import de.htwberlin.schbuet.application.data.geo.GeoAddress;
+import de.htwberlin.schbuet.application.data.geo.GeoCoords;
+import de.htwberlin.schbuet.application.errors.GeoLookupException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-@Service
+@Component
 @Slf4j
-public class GoogleMapsGeoService implements GeoService {
-
+public class GoogleMapsLocationProvider implements GeoLocationProvider {
+	private final GoogleMapsConfig config;
 	private final GeoApiContext context;
-	private final String language;
 
-	public GoogleMapsGeoService(@Value("${geo.apikey}") String apiKey, @Value("${geo.language}") String language) {
-		this.language = language;
+	public GoogleMapsLocationProvider(GoogleMapsConfig config) {
+		this.config = config;
 		this.context = new GeoApiContext.Builder()
-			.apiKey(apiKey)
+			.apiKey(config.getApiKey())
 			.disableRetries()
 			.build();
 	}
 	
 	@Override
-	public GeoCoords getCoordsFromAddress(GeoAddress address) throws GeoServiceException {
+	public GeoCoords getCoordsFromAddress(GeoAddress address) throws GeoLookupException {
 		String googleAddr = toGoogleAddressFormat(address);
 		GeocodingResult geocode = fetchGoogleGeocode(googleAddr);
 		LatLng location = geocode.geometry.location;
@@ -35,7 +38,7 @@ public class GoogleMapsGeoService implements GeoService {
 	}
 
 	@Override
-	public GeoAddress getAddressFromCoords(GeoCoords coords) throws GeoServiceException {
+	public GeoAddress getAddressFromCoords(GeoCoords coords) throws GeoLookupException {
 		LatLng location = new LatLng(coords.getLatitude(), coords.getLongitude());
 		GeocodingResult geocode = fetchGoogleReverseGeocode(location);
 		String country = getAddressComponent(AddressComponentType.COUNTRY, geocode);
@@ -47,39 +50,41 @@ public class GoogleMapsGeoService implements GeoService {
 		return new GeoAddress(country, city, postalCode, street);
 	}
 	
-	private GeocodingResult fetchGoogleGeocode(String address) throws GeoServiceException {
+	private GeocodingResult fetchGoogleGeocode(String address) throws GeoLookupException {
 		GeocodingResult[] results;
 		
 		try {
 			results = GeocodingApi.geocode(context, address).await();
 		} catch (Exception e) {
 			log.error("Failed to execute geocode on google maps");
-			throw new GeoServiceException("Failed to execute geocode on google maps", e);
+			throw new GeoLookupException("Failed to execute geocode on google maps", e);
 		}
 		
 		if (results.length == 0) {
-			throw new GeoServiceException();
+			throw new GeoLookupException();
 		}
 		return results[0];
 	}
 	
-	private GeocodingResult fetchGoogleReverseGeocode(LatLng location) throws GeoServiceException {
+	private GeocodingResult fetchGoogleReverseGeocode(LatLng location) throws GeoLookupException {
 		GeocodingResult[] results;
 		
 		try {
-			results = GeocodingApi.reverseGeocode(context, location).language(this.language).await();
+			results = GeocodingApi.reverseGeocode(context, location)
+					.language(config.getApiKey())
+					.await();
 		} catch (Exception e) {
 			log.error("Failed to execute reverse geocode on google maps");
-			throw new GeoServiceException("Failed to execute reverse geocode on google maps", e);
+			throw new GeoLookupException("Failed to execute reverse geocode on google maps", e);
 		}
 		
 		if (results.length == 0) {
-			throw new GeoServiceException();
+			throw new GeoLookupException();
 		}
 		return results[0];
 	}
 	
-	private String getAddressComponent(AddressComponentType type, GeocodingResult geocode) throws GeoServiceException {
+	private String getAddressComponent(AddressComponentType type, GeocodingResult geocode) throws GeoLookupException {
 		for (AddressComponent component : geocode.addressComponents) {
 			for (AddressComponentType componentType : component.types) {
 				if (componentType == type) {
@@ -88,7 +93,7 @@ public class GoogleMapsGeoService implements GeoService {
 			}
 		}
 		log.error("Failed to find address component of type: " + type);
-		throw new GeoServiceException("Failed to find address component of type: " + type);
+		throw new GeoLookupException("Failed to find address component of type: " + type);
 	}
 	
 	private String toGoogleAddressFormat(GeoAddress address) {

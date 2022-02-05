@@ -19,9 +19,13 @@ springdoc:
   swagger-ui:
     path: /api/swagger-ui
 
-geo:
+googlemaps:
   apikey: ""
   language: "de-DE"
+
+redis:
+  hostname: 127.0.0.1
+  port: 6379
 
 server:
   servlet:

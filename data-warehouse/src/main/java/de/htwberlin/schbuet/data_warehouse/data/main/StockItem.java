@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Builder
-public class WarehouseItem {
+public class StockItem {
 
     @Id
     @GeneratedValue(generator="system-uuid")

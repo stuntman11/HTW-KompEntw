@@ -1,8 +1,8 @@
 package de.htwberlin.schbuet.application.data.response;
 
 import de.htwberlin.schbuet.application.data.request.RequestTax;
+import de.htwberlin.schbuet.application.data.geo.GeoAddress;
 import de.htwberlin.schbuet.application.data.main.Product;
-import de.htwberlin.schbuet.application.service.geo.GeoAddress;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +27,7 @@ public class ResponseFullProduct {
     private int deliveryTimeInDays;
     private GeoAddress address;
 
-    public ResponseFullProduct(Product product, RequestTax requestTax, GeoAddress geoAddress, ResponseWarehouseItem warehouseItem) {
+    public ResponseFullProduct(Product product, RequestTax requestTax, GeoAddress geoAddress, ResponseStockItem stockItem) {
         this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
@@ -37,7 +37,7 @@ public class ResponseFullProduct {
         this.yearOfProduction = product.getYearOfProduction();
         this.createdDate = product.getCreatedDate();
         this.address = geoAddress;
-        this.quantity = warehouseItem.getQuantity();
-        this.deliveryTimeInDays = warehouseItem.getDeliveryTimeInDays();
+        this.quantity = stockItem.getQuantity();
+        this.deliveryTimeInDays = stockItem.getDeliveryTimeInDays();
     }
 }

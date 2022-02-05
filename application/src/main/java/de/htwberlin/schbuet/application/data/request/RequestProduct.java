@@ -1,12 +1,13 @@
 package de.htwberlin.schbuet.application.data.request;
 
-import de.htwberlin.schbuet.application.service.geo.GeoAddress;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+
+import de.htwberlin.schbuet.application.data.geo.GeoAddress;
 
 @Data
 public class RequestProduct {

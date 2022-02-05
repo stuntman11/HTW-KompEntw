@@ -11,15 +11,15 @@ import java.util.List;
 @RestController
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductService products;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    public ProductController(ProductService products) {
+        this.products = products;
     }
 
     @GetMapping(value = "/products")
     @ApiResponse(description = "Get all products saved from import file to check if data is valid")
     public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+        return products.getAllProducts();
     }
 }
