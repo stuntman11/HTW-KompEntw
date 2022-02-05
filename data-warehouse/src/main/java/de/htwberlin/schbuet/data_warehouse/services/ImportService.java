@@ -31,8 +31,9 @@ public class ImportService {
     @SneakyThrows
     @Scheduled(cron = "0 * * * *")
     public void importProductsFromCsv() {
-
-        var file = new File("export-products.csv");
+        var basePath = System.getProperty("java.io.tmpdir");
+        var file = new File(basePath, "export-products.csv");
+        
         if (file.exists() && file.isFile() && file.canRead()) {
             var inputStream = new FileInputStream(file);
             var list = parseService.parseProductInputStream(inputStream);

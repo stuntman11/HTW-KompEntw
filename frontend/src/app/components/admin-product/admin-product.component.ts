@@ -23,6 +23,7 @@ export class AdminProductComponent implements OnInit {
   edit: boolean;
   loading: boolean;
   selectedID: string = '';
+  errorMsg: string = '';
 
   constructor(private httpService: ProductHttpService, private productService: ProductService, private demo: DemoService, private modalService: NgbModal, private importExport: ImportExportService) {
     this.selected = new BodyProduct()
@@ -35,6 +36,7 @@ export class AdminProductComponent implements OnInit {
   }
 
   getAllProducts() {
+    this.errorMsg = '';
     this.httpService.getProductList().subscribe(
       (data) => {
         this.products = data;
@@ -46,12 +48,15 @@ export class AdminProductComponent implements OnInit {
 
   openModal() {
     this.edit = false;
+    this.loading = false;
+    this.errorMsg = '';
     this.selectedID = '';
     this.selected = new BodyProduct()
     this.ngModalService = this.modalService.open(this.ngModal, {centered: true, backdrop: 'static'});
   }
 
   openEditModal(item: ProductBasic) {
+    this.errorMsg = '';
     this.edit = true;
     this.loading = true;
     this.httpService.getProductDetail(item.id).subscribe(
@@ -59,7 +64,12 @@ export class AdminProductComponent implements OnInit {
         this.selected = this.productService.bodyFromFullProduct(response);
         this.loading = false;
         this.selectedID = item.id;
+        if (response && response.id === item.id) {
+        } else {
+          this.errorMsg = 'Error: Could not get all product infos.';
+        }
       }, (error: any) => {
+        this.errorMsg = 'Error: Could not get all product infos.';
         console.log(error);
       });
     this.ngModalService = this.modalService.open(this.ngModal, {centered: true, backdrop: 'static'});
@@ -118,7 +128,6 @@ export class AdminProductComponent implements OnInit {
         console.log(error);
       });
   }
-
 
 
 }

@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileWriter;
 
 @Service
@@ -20,8 +21,11 @@ public class ExportService {
     
     @SneakyThrows
     public void createProductsExportFile() {
-        try (FileWriter file = new FileWriter("export-products.csv")) {
-        	CsvExport csv = new CsvExport(file);
+    	var basePath = System.getProperty("java.io.tmpdir");
+    	var file = new File(basePath, "export-products.csv");
+    	
+        try (FileWriter writer = new FileWriter(file)) {
+        	CsvExport csv = new CsvExport(writer);
         	var allProducts = productRepository.findAll();
             
         	for (Product product : allProducts) {
