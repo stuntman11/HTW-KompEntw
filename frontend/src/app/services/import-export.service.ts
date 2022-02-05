@@ -12,7 +12,7 @@ export class ImportExportService {
   }
 
   exportProducts(): Observable<void> {
-    return this.http.get<void>(environment.api + '/api/v1/product/export');
+    return this.http.post<void>(environment.api + '/api/v1/product/export', null);
   }
 
   importProducts(): Observable<void> {

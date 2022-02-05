@@ -8,18 +8,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CsvServiceTest {
 
-    InputStream is;
-    CsvService parseService;
+    InputStream testCsv;
+    CsvService csvService;
 
     @BeforeEach
     void setUp(){
-        is = getClass().getClassLoader().getResourceAsStream("TestCsv.csv");
-        parseService = new CsvService();
+        testCsv = getClass().getClassLoader().getResourceAsStream("TestCsv.csv");
+        csvService = new CsvService();
     }
 
     @Test
     void testParseCsvFromFile() {
-        var list = parseService.parseProductInputStream(is);
+        var list = csvService.parseProductInputStream(testCsv);
 
         assertEquals(2, list.size());
         assertEquals("3284279A-0895-4669-A34A-894B2B415ED7", list.get(0).getId());
