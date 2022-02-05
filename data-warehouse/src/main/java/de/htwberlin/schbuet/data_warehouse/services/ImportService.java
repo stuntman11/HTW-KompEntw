@@ -57,8 +57,8 @@ public class ImportService {
     private void setAndSaveProduct(ProductCsv csv, Product item) {
         item.setProductId(csv.getIdAsUUID());
         item.setName(csv.getName());
-        item.setCategory(csv.getName());
-        item.setDescription(csv.getName());
+        item.setCategory(csv.getCategory());
+        item.setDescription(csv.getDescription());
         item.setYearOfProduction(csv.getYearOfProduction());
         item.setPriceInCents(csv.getPriceInCents());
         item.setItemNumber(csv.getItemNumber());

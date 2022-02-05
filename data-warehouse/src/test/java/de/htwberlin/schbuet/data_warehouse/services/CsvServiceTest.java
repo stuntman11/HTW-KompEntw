@@ -1,5 +1,6 @@
 package de.htwberlin.schbuet.data_warehouse.services;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.InputStream;
@@ -18,15 +19,12 @@ class CsvServiceTest {
     }
 
     @Test
-    void testParseCsvFromFile() {
+    void testParseCsvFromFileShouldReturnValidList() {
         var list = csvService.parseProductInputStream(testCsv);
 
         assertEquals(2, list.size());
         assertEquals("3284279A-0895-4669-A34A-894B2B415ED7", list.get(0).getId());
         assertEquals("808D0919-F872-4F6F-874D-4E2584158BF9", list.get(1).getId());
-
-        assertEquals("Product 1", list.get(0).getName());
-        assertEquals("Product 2", list.get(1).getName());
 
         assertEquals("Product 1", list.get(0).getName());
         assertEquals("Product 2", list.get(1).getName());
@@ -45,5 +43,21 @@ class CsvServiceTest {
 
         assertEquals(2021, list.get(0).getYearOfProduction());
         assertEquals(2019, list.get(1).getYearOfProduction());
+    }
+
+    @Test
+    void testParseCsvFromMissingFileShouldReturnEmptyList() {
+        testCsv = getClass().getClassLoader().getResourceAsStream("NotExisting.csv");
+        var list = csvService.parseProductInputStream(testCsv);
+
+        assertEquals(0, list.size());
+    }
+
+    @Test
+    void testParseMalformedFileShouldThrowException() {
+        testCsv = getClass().getClassLoader().getResourceAsStream("CorruptTestCsv.csv");
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            var list = csvService.parseProductInputStream(testCsv);
+        });
     }
 }
