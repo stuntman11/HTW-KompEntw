@@ -18,7 +18,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr (click)="openEditModal(product)" *ngFor="let product of products">
+    <tr (click)="openEditModal(product)" *ngFor="let product of products" [style.cursor]="'pointer'">
       <td>{{product.id}}</td>
       <td>{{product.name}}</td>
       <td>{{product.category}}</td>
@@ -42,6 +42,7 @@
     </h5>
   </div>
   <div class="modal-body p-3">
+    <app-error-msg [htmlMessage]="errorMsg" *ngIf="errorMsg && errorMsg.length > 0"></app-error-msg>
     <div *ngIf="!loading && selected" class="row">
 
       <div class="col-12">
@@ -139,16 +140,18 @@
 
     </div>
     <app-loader *ngIf="loading || !selected"></app-loader>
-    <button (click)="selectDemo(0)" class="btn btn-sm btn-outline-primary me-2">Demo 1</button>
-    <button (click)="selectDemo(1)" class="btn btn-sm btn-outline-primary me-2">Demo 2</button>
-    <button (click)="selectDemo(2)" class="btn btn-sm btn-outline-primary me-2">Demo 3</button>
+    <ng-container *ngIf="errorMsg.length == 0">
+      <button (click)="selectDemo(0)" class="btn btn-sm btn-outline-primary me-2">Demo 1</button>
+      <button (click)="selectDemo(1)" class="btn btn-sm btn-outline-primary me-2">Demo 2</button>
+      <button (click)="selectDemo(2)" class="btn btn-sm btn-outline-primary me-2">Demo 3</button>
+    </ng-container>
   </div>
   <div class="modal-footer pb-2 pt-2">
     <button (click)="createItem()" *ngIf="!edit && selected"
             [attr.disabled]="(selected.name.length > 1) ? null: true"
             class="btn btn-success btn-success btn-sm">Create
     </button>
-    <button (click)="updateItem()" *ngIf="edit && selected"
+    <button (click)="updateItem()" *ngIf="edit && selected && errorMsg.length == 0"
             [attr.disabled]="(selected.name.length > 1) ? null: true"
             class="btn btn-success btn-success btn-sm">Save
     </button>
