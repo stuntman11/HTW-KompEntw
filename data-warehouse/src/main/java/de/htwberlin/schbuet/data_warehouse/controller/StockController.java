@@ -21,7 +21,7 @@ public class StockController {
 
     @GetMapping("/stock/{productId}")
     @ApiResponse(description = "Returns a stock item for the given UUID.")
-    public StockItem getAdditionalProductInfo(@PathVariable UUID productId) {
+    public StockItem getStockItem(@PathVariable UUID productId) {
         return warehouse.getStockItemByUUID(productId);
     }
 

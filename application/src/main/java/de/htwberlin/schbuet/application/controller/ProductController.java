@@ -4,6 +4,11 @@ import com.sun.istack.NotNull;
 import de.htwberlin.schbuet.application.data.request.RequestProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
+import de.htwberlin.schbuet.application.errors.GeoLookupException;
+import de.htwberlin.schbuet.application.errors.ProductNotFoundException;
+import de.htwberlin.schbuet.application.errors.StockCreationFailedException;
+import de.htwberlin.schbuet.application.errors.StockNotFoundException;
+import de.htwberlin.schbuet.application.errors.TaxCouldNotBeCalculatedException;
 import de.htwberlin.schbuet.application.service.ProductService;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -36,26 +41,26 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{uuid}")
-    public ResponseFullProduct getFullProductInfo(@PathVariable @NotNull UUID uuid) {
+    public ResponseFullProduct getFullProductInfo(@PathVariable @NotNull UUID uuid) throws ProductNotFoundException, TaxCouldNotBeCalculatedException, StockNotFoundException, GeoLookupException {
         return products.getDetailedProductInfo(uuid);
     }
 
     //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
     @DeleteMapping(value = "/{uuid}")
-    public void deleteProduct(@PathVariable @NotNull UUID uuid) {
+    public void deleteProduct(@PathVariable @NotNull UUID uuid) throws ProductNotFoundException {
         products.deleteProduct(uuid);
     }
 
     //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
     @PostMapping(value = "/")
-    public UUID createProduct(@Valid @RequestBody RequestProduct body) {
+    public UUID createProduct(@Valid @RequestBody RequestProduct body) throws StockCreationFailedException {
         return products.createProduct(body);
     }
 
     //This functionality is for demo purposes only. For productive use, strong authentication must be implemented.
     @PutMapping(value = "/{uuid}")
-    public void updateProduct(@Valid @RequestBody RequestProduct body, @PathVariable @NotNull UUID uuid) {
-        products.updateProduct(body, uuid);
+    public void updateProduct(@Valid @RequestBody RequestProduct body, @PathVariable @NotNull UUID uuid) throws ProductNotFoundException, StockCreationFailedException {
+        products.updateProduct(uuid, body);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)

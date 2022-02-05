@@ -12,13 +12,14 @@ import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.data.request.RequestProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
-import de.htwberlin.schbuet.application.errors.ResourceNotFoundException;
+import de.htwberlin.schbuet.application.errors.GeoLookupException;
+import de.htwberlin.schbuet.application.errors.ProductNotFoundException;
+import de.htwberlin.schbuet.application.errors.StockCreationFailedException;
+import de.htwberlin.schbuet.application.errors.StockNotFoundException;
 import de.htwberlin.schbuet.application.errors.TaxCouldNotBeCalculatedException;
-import de.htwberlin.schbuet.application.errors.WarehouseResourceNotFoundException;
 import de.htwberlin.schbuet.application.repos.ProductRepository;
 import de.htwberlin.schbuet.application.service.geo.GeoService;
 import de.htwberlin.schbuet.application.service.tax.InternalTaxService;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -36,15 +37,13 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    @SneakyThrows()
-    public ResponseFullProduct getDetailedProductInfo(UUID uuid) {
-        var product = productRepository.findById(uuid);
-        if (product == null) {
-            log.warn("could not find a product with id " + uuid);
-            throw new ResourceNotFoundException(uuid);
-        }
-
-        return getFullProduct(product);
+    public ResponseFullProduct getDetailedProductInfo(UUID productId) throws ProductNotFoundException, TaxCouldNotBeCalculatedException, StockNotFoundException, GeoLookupException {
+        var product = getProduct(productId);
+        var tax = taxCalculator.getTaxForPrice(product.getPriceInCents());
+        var stock = warehouse.getStockForProduct(product.getId());
+        var geoCoordinates = new GeoCoords(stock.getLatitude(), stock.getLongitude());
+        var address = geo.getAddressFromCoords(geoCoordinates);
+        return new ResponseFullProduct(product, tax, address, stock);
     }
 
     public List<ResponseBasicProduct> getAllProducts() {
@@ -53,7 +52,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public UUID createProduct(RequestProduct requestProduct) {
+    public UUID createProduct(RequestProduct requestProduct) throws StockCreationFailedException {
         var product = Product.builder()
                 .name(requestProduct.getName())
                 .description(requestProduct.getDescription())
@@ -65,19 +64,18 @@ public class ProductService {
                 .build();
 
         product = productRepository.save(product);
-        warehouse.createStockItem(requestProduct, product.getId());
-        log.info("New product was created. ID:" + product.getId());
-        return product.getId();
+        
+        try {
+    		warehouse.createStockItem(product.getId(), requestProduct);
+            return product.getId();
+        } catch (Exception e) {
+        	productRepository.delete(product);
+        	throw e;
+        }
     }
 
-    @SneakyThrows()
-    public void updateProduct(RequestProduct requestProduct, UUID uuid) {
-        var product = productRepository.findById(uuid);
-        if (product == null) {
-            log.warn("could not find a product with id " + uuid);
-            throw new ResourceNotFoundException(uuid);
-        }
-
+    public void updateProduct(UUID productId, RequestProduct requestProduct) throws ProductNotFoundException, StockCreationFailedException {
+        var product = getProduct(productId);
         product.setCategory(requestProduct.getCategory());
         product.setDescription(requestProduct.getDescription());
         product.setYearOfProduction(requestProduct.getYearOfProduction());
@@ -87,39 +85,22 @@ public class ProductService {
 
         productRepository.save(product);
 
-        warehouse.createStockItem(requestProduct, product.getId());
-        log.info("Product was updated. ID:" + product.getId());
+        warehouse.createStockItem(product.getId(), requestProduct);
+        log.info("Product with id: '{}' was updated", product.getId());
     }
 
-    @SneakyThrows()
-    public void deleteProduct(UUID uuid) {
-        var product = productRepository.findById(uuid);
-        if (product == null) {
-            log.warn("could not delete resource with uuid " + uuid);
-            throw new ResourceNotFoundException(uuid);
-        }
-
+    public void deleteProduct(UUID productId) throws ProductNotFoundException {
+        var product = getProduct(productId);
         productRepository.delete(product);
-        log.info("Product was deleted. ID:" + uuid);
+        log.info("Product with id: '{}' was deleted", productId);
     }
-
-    @SneakyThrows()
-    private ResponseFullProduct getFullProduct(Product product) {
-        var tax = taxCalculator.getTaxForPrice(product.getPriceInCents());
-        if (tax == null) {
-            log.warn("could not get tax for price");
-            throw new TaxCouldNotBeCalculatedException();
+    
+    private Product getProduct(UUID productId) throws ProductNotFoundException {
+        var product = productRepository.findById(productId);
+        
+        if (product == null) {
+            throw new ProductNotFoundException(productId);
         }
-
-        var stockItem = warehouse.getStockItemForProduct(product.getId());
-        if (stockItem == null) {
-            log.warn("There is no stock item for the product with uuid " + product.getId());
-            throw new WarehouseResourceNotFoundException(product.getId());
-        }
-
-        var geoCoordinates = new GeoCoords(stockItem.getLatitude(), stockItem.getLongitude());
-        var address = geo.getAddressFromCoords(geoCoordinates);
-
-        return new ResponseFullProduct(product, tax, address, stockItem);
+        return product;
     }
 }

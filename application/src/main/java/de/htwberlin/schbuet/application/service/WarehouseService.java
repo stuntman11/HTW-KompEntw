@@ -8,14 +8,16 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import de.htwberlin.schbuet.application.data.request.RequestProduct;
 import de.htwberlin.schbuet.application.data.request.RequestStockItem;
 import de.htwberlin.schbuet.application.data.response.ResponseStockItem;
+import de.htwberlin.schbuet.application.errors.StockNotFoundException;
 import de.htwberlin.schbuet.application.errors.GeoLookupException;
+import de.htwberlin.schbuet.application.errors.StockCreationFailedException;
 import de.htwberlin.schbuet.application.service.geo.GeoService;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -32,35 +34,33 @@ public class WarehouseService {
         		.build();
     }
 
-    @SneakyThrows
-    public void createStockItem(RequestProduct requestProduct, UUID productId) {
+    public ResponseStockItem getStockForProduct(UUID productId) throws StockNotFoundException {
     	try {
-            var coordinates = geo.getCoordsFromAddress(requestProduct.getAddress());
-            var requestStock = RequestStockItem.builder()
-                    .productId(productId)
-                    .quantity(requestProduct.getQuantity())
-                    .deliveryTimeInDays(requestProduct.getDeliveryTimeInDays())
-                    .latitude(coordinates.getLatitude())
-                    .longitude(coordinates.getLongitude())
-                    .build();
-            
-            this.postRequestStockItem(requestStock);
-    	} catch (GeoLookupException e) {
-            log.warn("could not get coordinates for address");
+            String productUrl = "/stock/" + productId.toString();
+            return rest.getForObject(productUrl, ResponseStockItem.class);
+    	} catch (RestClientException e) {
+            throw new StockNotFoundException(productId, e);
     	}
     }
 
-    public ResponseStockItem getStockItemForProduct(UUID productId) {
-        String productUrl = "/stock/" + productId.toString();
-        return rest.getForObject(productUrl, ResponseStockItem.class);
-    }
-
-    private void postRequestStockItem(RequestStockItem requestStock) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        rest.postForEntity("/stock/", new HttpEntity<>(requestStock, headers), String.class);
-
-        log.info("stock item was posted to warehouse");
+    public void createStockItem(UUID productId, RequestProduct requestProduct) throws StockCreationFailedException {
+        try {
+	        var coordinates = geo.getCoordsFromAddress(requestProduct.getAddress());
+	        var requestStock = RequestStockItem.builder()
+	                .productId(productId)
+	                .quantity(requestProduct.getQuantity())
+	                .deliveryTimeInDays(requestProduct.getDeliveryTimeInDays())
+	                .latitude(coordinates.getLatitude())
+	                .longitude(coordinates.getLongitude())
+	                .build();
+        
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+            rest.postForEntity("/stock/", new HttpEntity<>(requestStock, headers), String.class);
+    	} catch (RestClientException | GeoLookupException e) {
+    		throw new StockCreationFailedException(productId, e);
+    	}
+        log.info("warehouse stock item was successfully created");
     }
 }
