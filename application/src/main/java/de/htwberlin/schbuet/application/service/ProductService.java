@@ -84,7 +84,6 @@ public class ProductService {
         product.setPriceInCents(requestProduct.getPriceInCents());
 
         productRepository.save(product);
-
         warehouse.createStockItem(product.getId(), requestProduct);
         log.info("Product with id: '{}' was updated", product.getId());
     }

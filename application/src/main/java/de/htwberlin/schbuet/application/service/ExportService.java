@@ -2,12 +2,12 @@ package de.htwberlin.schbuet.application.service;
 
 import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.repos.ProductRepository;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -19,8 +19,7 @@ public class ExportService {
         this.productRepository = productRepository;
     }
     
-    @SneakyThrows
-    public void createProductsExportFile() {
+    public void createProductsExportFile() throws IOException {
     	var basePath = System.getProperty("java.io.tmpdir");
     	var file = new File(basePath, "export-products.csv");
     	
@@ -31,7 +30,7 @@ public class ExportService {
         	for (Product product : allProducts) {
         		csv.writeProduct(product);
         	}
-            log.info("export-products.csv was created");
         }
+        log.info("export-products.csv was created");
     }
 }

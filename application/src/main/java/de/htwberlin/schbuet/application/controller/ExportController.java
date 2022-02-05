@@ -2,6 +2,8 @@ package de.htwberlin.schbuet.application.controller;
 
 import de.htwberlin.schbuet.application.service.ExportService;
 
+import java.io.IOException;
+
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(value = "/api/v1/product")
@@ -15,7 +17,7 @@ public class ExportController {
     }
 
     @PostMapping(value = "/export")
-    public void exportProductsToFile() {
+    public void exportProductsToFile() throws IOException {
 		exports.createProductsExportFile();
     }
 }
