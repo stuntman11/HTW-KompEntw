@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.file.FileSystems;
 import java.util.Date;
 
 @Service
@@ -32,7 +33,8 @@ public class ImportService {
     @Scheduled(cron = "0 * * * *")
     public void importProductsFromCsv() {
 
-        var file = new File("export-products.csv");
+        var path = System.getProperty("java.io.tmpdir");
+        var file = new File(path + "export-products.csv");
         if (file.exists() && file.isFile() && file.canRead()) {
             var inputStream = new FileInputStream(file);
             var list = parseService.parseProductInputStream(inputStream);
