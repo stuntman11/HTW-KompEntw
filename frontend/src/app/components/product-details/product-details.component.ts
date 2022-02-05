@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ProductHttpService} from "../../services/product-http.service";
 import {ProductFull} from "../../models/product-full";
@@ -13,6 +13,7 @@ import {TaxHttpService} from "../../services/tax-http.service";
 export class ProductDetailsComponent implements OnInit {
 
   id: string = 'new';
+  errorMsg: string = '';
 
   product: ProductFull | undefined
   tax: Tax | undefined
@@ -31,11 +32,14 @@ export class ProductDetailsComponent implements OnInit {
     this.productHttpService.getProductDetail(this.id).subscribe(
       (data) => {
         this.product = data;
-        if (this.product) {
+        if (this.product && this.product.id === this.id) {
           this.getTax(this.product.price.basePrice)
+        } else {
+          this.errorMsg = 'Error: Could not get all product infos.';
         }
       },
       (error: any) => {
+        this.errorMsg = 'Error: Could not get all product infos.';
         console.log(error)
       });
   }

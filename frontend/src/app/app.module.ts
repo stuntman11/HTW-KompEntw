@@ -16,6 +16,7 @@ import {LoaderComponent} from './components/loader/loader.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule} from "@angular/forms";
 import {CentToEuroPipe} from './pipes/cent-to-euro.pipe';
+import { ErrorMsgComponent } from './components/error-msg/error-msg.component';
 
 const routes: Routes = [
   {path: 'shop', component: HomeComponent},
@@ -55,7 +56,8 @@ const routes: Routes = [
     HomeComponent,
     AdminProductComponent,
     LoaderComponent,
-    CentToEuroPipe
+    CentToEuroPipe,
+    ErrorMsgComponent
   ],
   imports: [
     BrowserModule,

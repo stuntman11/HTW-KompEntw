@@ -1,5 +1,6 @@
 <div class="container py-3">
   <button [routerLink]="'/shop'" class="btn btn-sm btn-primary my-3">Back to all products</button>
+  <app-error-msg [htmlMessage]="errorMsg" *ngIf="errorMsg && errorMsg.length > 0"></app-error-msg>
   <ng-container *ngIf="product">
     <div class="row">
       <div class="col-auto">
