@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import de.htwberlin.schbuet.application.data.geo.GeoAddress;
 import de.htwberlin.schbuet.application.data.geo.GeoCoords;
 import de.htwberlin.schbuet.application.errors.GeoLookupException;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class GeoService {
 	private GoogleMapsLocationProvider location;
 	private RedisLocationCache locationCache;
@@ -20,6 +22,7 @@ public class GeoService {
 		GeoCoords coords = locationCache.findCoords(address);
 
 		if (coords != null) {
+			log.info("Geo coords cache hit for {}", address);
 			return coords;
 		}
 		coords = location.getCoordsFromAddress(address);
@@ -31,6 +34,7 @@ public class GeoService {
 		GeoAddress address = locationCache.findAddress(coords);
 
 		if (address != null) {
+			log.info("Geo address cache hit for {}", coords);
 			return address;
 		}
 		address = location.getAddressFromCoords(coords);

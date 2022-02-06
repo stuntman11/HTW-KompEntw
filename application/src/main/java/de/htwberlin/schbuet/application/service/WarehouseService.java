@@ -1,9 +1,13 @@
 package de.htwberlin.schbuet.application.service;
 
-import java.util.List;
-import java.util.UUID;
-
-import io.lettuce.core.output.ValueOutput;
+import de.htwberlin.schbuet.application.data.request.RequestProduct;
+import de.htwberlin.schbuet.application.data.request.RequestStockItem;
+import de.htwberlin.schbuet.application.data.response.ResponseStockItem;
+import de.htwberlin.schbuet.application.errors.GeoLookupException;
+import de.htwberlin.schbuet.application.errors.StockCreationFailedException;
+import de.htwberlin.schbuet.application.errors.StockNotFoundException;
+import de.htwberlin.schbuet.application.service.geo.GeoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,14 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import de.htwberlin.schbuet.application.data.request.RequestProduct;
-import de.htwberlin.schbuet.application.data.request.RequestStockItem;
-import de.htwberlin.schbuet.application.data.response.ResponseStockItem;
-import de.htwberlin.schbuet.application.errors.StockNotFoundException;
-import de.htwberlin.schbuet.application.errors.GeoLookupException;
-import de.htwberlin.schbuet.application.errors.StockCreationFailedException;
-import de.htwberlin.schbuet.application.service.geo.GeoService;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j

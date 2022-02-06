@@ -1,13 +1,11 @@
 package de.htwberlin.schbuet.data_warehouse.services;
 
-import org.junit.jupiter.api.AfterEach;
+import de.htwberlin.schbuet.data_warehouse.repos.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,20 +25,19 @@ class ImportServiceTest {
     @Autowired
     private ImportService importService;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     private InputStream source;
     private File dest;
 
     @BeforeEach
-    void setUp(){
+    void setUp() throws IOException {
         var basePath = System.getProperty("java.io.tmpdir");
         dest = new File(basePath, "export-products.csv");
         source = getClass().getClassLoader().getResourceAsStream("TestCsv.csv");
-    }
-
-    @AfterEach
-    @SneakyThrows
-    public void cleanUpEach() {
-		Files.deleteIfExists(dest.toPath());
+        Files.deleteIfExists(dest.toPath());
+        productRepository.deleteAll();
     }
 
     @Test
@@ -71,10 +68,7 @@ class ImportServiceTest {
 
     @Test
     void testImportFileServicesShouldImportNothingWhenFileNotFound() {
-        var basePath = System.getProperty("java.io.tmpdir");
-        dest = new File(basePath, "export-products-test.csv");
         importService.importProductsFromFile();
-
         var list = productService.getAllProducts();
         
         assertEquals(0, list.size());
