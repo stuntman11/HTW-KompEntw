@@ -1,7 +1,5 @@
 package de.htwberlin.schbuet.data_warehouse.data.csv;
 
-import java.util.UUID;
-
 import com.opencsv.bean.CsvBindByPosition;
 
 import lombok.Data;
@@ -29,8 +27,4 @@ public class ProductCsv {
 
     @CsvBindByPosition(position = 6)
     private int yearOfProduction;
-
-    public UUID getIdAsUUID() {
-        return UUID.fromString(id);
-    }
 }

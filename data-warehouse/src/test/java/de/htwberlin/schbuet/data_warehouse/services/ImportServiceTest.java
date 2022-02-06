@@ -46,7 +46,7 @@ class ImportServiceTest {
     @Test
     void testImportFileServiceShouldImportTwoProducts() throws IOException {
         Files.copy(source, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        importService.importProductsFromCsv();
+        importService.importProductsFromFile();
 
         var list = productService.getAllProducts();
 
@@ -73,7 +73,7 @@ class ImportServiceTest {
     void testImportFileServicesShouldImportNothingWhenFileNotFound() {
         var basePath = System.getProperty("java.io.tmpdir");
         dest = new File(basePath, "export-products-test.csv");
-        importService.importProductsFromCsv();
+        importService.importProductsFromFile();
 
         var list = productService.getAllProducts();
         
