@@ -26,11 +26,12 @@ class GeoServiceTest {
 	@BeforeEach
     void setUp(){
 		geo = new GeoService(location, locationCache);
+		when(location.getAddressFromCoords(COORDS)).thenReturn(ADDRESS);
+		when(location.getCoordsFromAddress(ADDRESS)).thenReturn(COORDS);
     }
 	
 	@Test
 	void requestsAddressFromProviderAndCacheFails() throws GeoLookupException {
-		when(location.getAddressFromCoords(COORDS)).thenReturn(ADDRESS);
 		when(locationCache.findAddress(any())).thenReturn(null);
 		
 		GeoAddress address = geo.getAddressFromCoords(COORDS);
@@ -43,7 +44,6 @@ class GeoServiceTest {
 	
 	@Test
 	void requestsAddressFromProviderAndCacheSucceeds() throws GeoLookupException {
-		when(location.getAddressFromCoords(COORDS)).thenReturn(ADDRESS);
 		when(locationCache.findAddress(COORDS)).thenReturn(ADDRESS);
 		
 		GeoAddress address = geo.getAddressFromCoords(COORDS);
@@ -55,7 +55,6 @@ class GeoServiceTest {
 	
 	@Test
 	void requestsCoordsFromProviderAndCacheFails() throws GeoLookupException {
-		when(location.getCoordsFromAddress(ADDRESS)).thenReturn(COORDS);
 		when(locationCache.findCoords(any())).thenReturn(null);
 		
 		GeoCoords coords = geo.getCoordsFromAddress(ADDRESS);
@@ -68,7 +67,6 @@ class GeoServiceTest {
 	
 	@Test
 	void requestsCoordsFromProviderAndCacheSucceeds() throws GeoLookupException {
-		when(location.getCoordsFromAddress(ADDRESS)).thenReturn(COORDS);
 		when(locationCache.findCoords(ADDRESS)).thenReturn(COORDS);
 		
 		GeoCoords coords = geo.getCoordsFromAddress(ADDRESS);
@@ -83,9 +81,8 @@ class GeoServiceTest {
 		when(location.getCoordsFromAddress(ADDRESS)).thenThrow(GeoLookupException.class);
 		when(locationCache.findCoords(any())).thenReturn(null);
 		
-		assertThrows(
-				GeoLookupException.class,
-				() -> geo.getCoordsFromAddress(ADDRESS)
-		);
+		assertThrows(GeoLookupException.class, () -> {
+			geo.getCoordsFromAddress(ADDRESS);
+		});
 	}
 }

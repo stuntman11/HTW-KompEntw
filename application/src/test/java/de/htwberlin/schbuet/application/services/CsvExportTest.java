@@ -14,7 +14,7 @@ import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.service.CsvExport;
 
 @SpringBootTest
-public class CsvExportTest {
+class CsvExportTest {
 	StringWriter writer;
 	CsvExport csv;
 	Product product;

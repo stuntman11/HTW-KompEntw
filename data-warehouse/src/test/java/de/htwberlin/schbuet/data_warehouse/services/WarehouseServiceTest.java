@@ -2,7 +2,6 @@ package de.htwberlin.schbuet.data_warehouse.services;
 
 import de.htwberlin.schbuet.data_warehouse.data.request.RequestStockItem;
 import de.htwberlin.schbuet.data_warehouse.errors.ResourceNotFoundException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ class WarehouseServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.item1 = new RequestStockItem(UUID.fromString("854de25a-9fb5-428c-a3bd-68418bbcc1e2"), 5, 2, 	52.520008, 	13.404954);
-        this.item2 = new RequestStockItem(UUID.fromString("f30b1ccd-9f7b-469e-879e-ae08c1aa708c"), 3, 4, 	48.137154, 	11.576124);
+        item1 = new RequestStockItem(UUID.fromString("854de25a-9fb5-428c-a3bd-68418bbcc1e2"), 5, 2, 52.520008, 13.404954);
+        item2 = new RequestStockItem(UUID.fromString("f30b1ccd-9f7b-469e-879e-ae08c1aa708c"), 3, 4, 48.137154, 11.576124);
         warehouse.createOrUpdateStockItem(item1);
         warehouse.createOrUpdateStockItem(item2);
     }
@@ -60,13 +59,13 @@ class WarehouseServiceTest {
 
     @Test
     void testCreateOrUpdateShouldUpdateItemsIfAlreadyExist() {
-        this.item1 = new RequestStockItem(UUID.fromString("854de25a-9fb5-428c-a3bd-68418bbcc1e2"), 1, 6, 	51.520008, 	12.404954);
+        item1 = new RequestStockItem(UUID.fromString("854de25a-9fb5-428c-a3bd-68418bbcc1e2"), 1, 6, 	51.520008, 	12.404954);
         warehouse.createOrUpdateStockItem(item1);
 
         var savedItem1 = warehouse.getStockItemByUUID(UUID.fromString("854de25a-9fb5-428c-a3bd-68418bbcc1e2"));
         var savedItem2 = warehouse.getStockItemByUUID(UUID.fromString("f30b1ccd-9f7b-469e-879e-ae08c1aa708c"));
 
-        assertEquals(2, warehouse.getAllSockItems().size());
+        assertEquals(2, warehouse.getAllStockItems().size());
 
         assertEquals("854de25a-9fb5-428c-a3bd-68418bbcc1e2", savedItem1.getProductId().toString());
         assertEquals("f30b1ccd-9f7b-469e-879e-ae08c1aa708c", savedItem2.getProductId().toString());
@@ -88,37 +87,42 @@ class WarehouseServiceTest {
 
     @Test
     void testDeleteItemShouldDeleteItem() {
-        assertEquals(2, warehouse.getAllSockItems().size());
+        assertEquals(2, warehouse.getAllStockItems().size());
+        
         warehouse.deleteStockItem(UUID.fromString("854de25a-9fb5-428c-a3bd-68418bbcc1e2"));
-        assertEquals(1, warehouse.getAllSockItems().size());
+        
+        assertEquals(1, warehouse.getAllStockItems().size());
         assertNull(warehouse.getStockItemByUUID(UUID.fromString("854de25a-9fb5-428c-a3bd-68418bbcc1e2")));
         assertNotNull(warehouse.getStockItemByUUID(UUID.fromString("f30b1ccd-9f7b-469e-879e-ae08c1aa708c")));
     }
 
     @Test
     void testDeleteNonExistingItemShouldThrowException() {
-        assertEquals(2, warehouse.getAllSockItems().size());
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+        assertEquals(2, warehouse.getAllStockItems().size());
+        assertThrows(ResourceNotFoundException.class, () -> {
             warehouse.deleteStockItem(UUID.fromString("dd7a2f5f-2ed6-4b71-86a7-9e0b9ec818c8"));
         });
-        assertEquals(2, warehouse.getAllSockItems().size());
+        assertEquals(2, warehouse.getAllStockItems().size());
     }
 
     @Test
     void testGetItemByUUIDShouldReturnCorrectValue() {
         var savedItem1 = warehouse.getStockItemByUUID(UUID.fromString("854de25a-9fb5-428c-a3bd-68418bbcc1e2"));
+        
         assertEquals("854de25a-9fb5-428c-a3bd-68418bbcc1e2", savedItem1.getProductId().toString());
     }
 
     @Test
     void testGetItemByUnknownUUIDShouldReturnNull() {
         var savedItem1 = warehouse.getStockItemByUUID(UUID.fromString("854de25a-0000-0000-0000-68418bbcc1e2"));
+        
         assertNull(savedItem1);
     }
 
     @Test
     void testGetItemByNullShouldReturnNull() {
         var savedItem1 = warehouse.getStockItemByUUID(null);
+        
         assertNull(savedItem1);
     }
 }

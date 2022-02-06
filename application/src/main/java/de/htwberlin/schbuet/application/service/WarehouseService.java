@@ -37,7 +37,12 @@ public class WarehouseService {
     public ResponseStockItem getStockForProduct(UUID productId) {
     	try {
             String productUrl = "/stock/" + productId.toString();
-            return rest.getForObject(productUrl, ResponseStockItem.class);
+            ResponseStockItem stock = rest.getForObject(productUrl, ResponseStockItem.class);
+            
+            if (stock == null) {
+            	throw new StockNotFoundException(productId);
+            }
+            return stock;
     	} catch (RestClientException e) {
             throw new StockNotFoundException(productId, e);
     	}

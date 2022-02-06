@@ -1,6 +1,5 @@
 package de.htwberlin.schbuet.data_warehouse.services;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.InputStream;
@@ -48,6 +47,7 @@ class CsvServiceTest {
     @Test
     void testParseCsvFromMissingFileShouldReturnEmptyList() {
         testCsv = getClass().getClassLoader().getResourceAsStream("NotExisting.csv");
+        
         var list = csvService.parseProductInputStream(testCsv);
 
         assertEquals(0, list.size());
@@ -56,8 +56,9 @@ class CsvServiceTest {
     @Test
     void testParseMalformedFileShouldThrowException() {
         testCsv = getClass().getClassLoader().getResourceAsStream("CorruptTestCsv.csv");
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            var list = csvService.parseProductInputStream(testCsv);
+        
+        assertThrows(RuntimeException.class, () -> {
+            csvService.parseProductInputStream(testCsv);
         });
     }
 }

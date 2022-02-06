@@ -47,7 +47,7 @@ public class WarehouseService {
         }
     }
 
-    public List<StockItem> getAllSockItems() {
+    public List<StockItem> getAllStockItems() {
         return stockItemRepository.findAll();
     }
 
