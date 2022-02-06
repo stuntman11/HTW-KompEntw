@@ -17,6 +17,6 @@ public class ImportController {
     @GetMapping(value = "/import-products")
     @ApiResponse(description = "Manually trigger import products from csv file")
     public void importProductsFromFile() {
-        importService.importProductsFromCsv();
+        importService.importProductsFromFile();
     }
 }

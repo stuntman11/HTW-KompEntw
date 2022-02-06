@@ -37,17 +37,17 @@ public class WarehouseService {
     }
 
     public UUID createOrUpdateStockItem(RequestStockItem requestItem) {
-        var item = this.getStockItemByUUID(requestItem.getProductId());
-        if (item == null) {
+        var stock = this.getStockItemByUUID(requestItem.getProductId());
+        if (stock == null) {
             log.info("no stock item found for product id " + requestItem.getProductId());
             return this.createStockItem(requestItem);
         } else {
             log.info("stock item found for product id " + requestItem.getProductId());
-            return this.updateStockItem(item, requestItem);
+            return this.updateStockItem(stock, requestItem);
         }
     }
 
-    public List<StockItem> getAllSockItems() {
+    public List<StockItem> getAllStockItems() {
         return stockItemRepository.findAll();
     }
 

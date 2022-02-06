@@ -12,11 +12,7 @@ import de.htwberlin.schbuet.application.data.main.Product;
 import de.htwberlin.schbuet.application.data.request.RequestProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseBasicProduct;
 import de.htwberlin.schbuet.application.data.response.ResponseFullProduct;
-import de.htwberlin.schbuet.application.errors.GeoLookupException;
 import de.htwberlin.schbuet.application.errors.ProductNotFoundException;
-import de.htwberlin.schbuet.application.errors.StockCreationFailedException;
-import de.htwberlin.schbuet.application.errors.StockNotFoundException;
-import de.htwberlin.schbuet.application.errors.TaxCouldNotBeCalculatedException;
 import de.htwberlin.schbuet.application.repos.ProductRepository;
 import de.htwberlin.schbuet.application.service.geo.GeoService;
 import de.htwberlin.schbuet.application.service.tax.InternalTaxService;
@@ -37,7 +33,16 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ResponseFullProduct getDetailedProductInfo(UUID productId) throws ProductNotFoundException, TaxCouldNotBeCalculatedException, StockNotFoundException, GeoLookupException {
+    public Product getProduct(UUID productId) {
+        var product = productRepository.findById(productId);
+        
+        if (product == null) {
+            throw new ProductNotFoundException(productId);
+        }
+        return product;
+    }
+    
+    public ResponseFullProduct getDetailedProductInfo(UUID productId) {
         var product = getProduct(productId);
         var tax = taxCalculator.getTaxForPrice(product.getPriceInCents());
         var stock = warehouse.getStockForProduct(product.getId());
@@ -52,7 +57,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public UUID createProduct(RequestProduct requestProduct) throws StockCreationFailedException {
+    public UUID createProduct(RequestProduct requestProduct) {
         var product = Product.builder()
                 .name(requestProduct.getName())
                 .description(requestProduct.getDescription())
@@ -74,7 +79,7 @@ public class ProductService {
         }
     }
 
-    public void updateProduct(UUID productId, RequestProduct requestProduct) throws ProductNotFoundException, StockCreationFailedException {
+    public void updateProduct(UUID productId, RequestProduct requestProduct) {
         var product = getProduct(productId);
         product.setCategory(requestProduct.getCategory());
         product.setDescription(requestProduct.getDescription());
@@ -84,23 +89,13 @@ public class ProductService {
         product.setPriceInCents(requestProduct.getPriceInCents());
 
         productRepository.save(product);
-
         warehouse.createStockItem(product.getId(), requestProduct);
         log.info("Product with id: '{}' was updated", product.getId());
     }
 
-    public void deleteProduct(UUID productId) throws ProductNotFoundException {
+    public void deleteProduct(UUID productId) {
         var product = getProduct(productId);
         productRepository.delete(product);
         log.info("Product with id: '{}' was deleted", productId);
-    }
-    
-    private Product getProduct(UUID productId) throws ProductNotFoundException {
-        var product = productRepository.findById(productId);
-        
-        if (product == null) {
-            throw new ProductNotFoundException(productId);
-        }
-        return product;
     }
 }

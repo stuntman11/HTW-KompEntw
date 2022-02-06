@@ -34,16 +34,21 @@ public class WarehouseService {
         		.build();
     }
 
-    public ResponseStockItem getStockForProduct(UUID productId) throws StockNotFoundException {
+    public ResponseStockItem getStockForProduct(UUID productId) {
     	try {
             String productUrl = "/stock/" + productId.toString();
-            return rest.getForObject(productUrl, ResponseStockItem.class);
+            ResponseStockItem stock = rest.getForObject(productUrl, ResponseStockItem.class);
+            
+            if (stock == null) {
+            	throw new StockNotFoundException(productId);
+            }
+            return stock;
     	} catch (RestClientException e) {
             throw new StockNotFoundException(productId, e);
     	}
     }
 
-    public void createStockItem(UUID productId, RequestProduct requestProduct) throws StockCreationFailedException {
+    public void createStockItem(UUID productId, RequestProduct requestProduct) {
         try {
 	        var coordinates = geo.getCoordsFromAddress(requestProduct.getAddress());
 	        var requestStock = RequestStockItem.builder()

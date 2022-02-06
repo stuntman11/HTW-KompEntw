@@ -1,12 +1,13 @@
 package de.htwberlin.schbuet.data_warehouse.services;
 
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,18 +38,15 @@ class ImportServiceTest {
     }
 
     @AfterEach
-    public void cleanUpEach(){
-        try {
-            Files.deleteIfExists(dest.toPath());
-        }
-        catch (IOException ignored) {
-        }
+    @SneakyThrows
+    public void cleanUpEach() {
+		Files.deleteIfExists(dest.toPath());
     }
 
     @Test
     void testImportFileServiceShouldImportTwoProducts() throws IOException {
         Files.copy(source, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        importService.importProductsFromCsv();
+        importService.importProductsFromFile();
 
         var list = productService.getAllProducts();
 
@@ -75,9 +73,10 @@ class ImportServiceTest {
     void testImportFileServicesShouldImportNothingWhenFileNotFound() {
         var basePath = System.getProperty("java.io.tmpdir");
         dest = new File(basePath, "export-products-test.csv");
-        importService.importProductsFromCsv();
+        importService.importProductsFromFile();
 
         var list = productService.getAllProducts();
+        
         assertEquals(0, list.size());
     }
 }

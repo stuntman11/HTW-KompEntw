@@ -2,7 +2,7 @@ package de.htwberlin.schbuet.application.errors;
 
 import java.util.UUID;
 
-public class StockCreationFailedException extends Exception {
+public class StockCreationFailedException extends RuntimeException {
 	private static final long serialVersionUID = 6901863162419639926L;
 	private UUID projectId;
 	

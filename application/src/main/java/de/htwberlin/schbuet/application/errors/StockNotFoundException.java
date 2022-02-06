@@ -2,7 +2,7 @@ package de.htwberlin.schbuet.application.errors;
 
 import java.util.UUID;
 
-public class StockNotFoundException extends Exception {
+public class StockNotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 5127597983815265458L;
 
 	public StockNotFoundException(UUID uuid) {
