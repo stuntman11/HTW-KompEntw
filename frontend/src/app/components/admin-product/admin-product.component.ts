@@ -22,6 +22,7 @@ export class AdminProductComponent implements OnInit {
   selected: BodyProduct | undefined
   edit: boolean;
   loading: boolean;
+  loadingInEx: boolean = false;
   selectedID: string = '';
   errorMsg: string = '';
 
@@ -110,22 +111,22 @@ export class AdminProductComponent implements OnInit {
   }
 
   exportProducts() {
+    this.loadingInEx = true;
     this.importExport.exportProducts().subscribe(
       () => {
-        this.getAllProducts();
-
+        setTimeout(() => { this.loadingInEx = false; }, 1000);
       }, (error: any) => {
-        console.log(error);
+        alert(error)
       });
   }
 
   importProducts() {
+    this.loadingInEx = true;
     this.importExport.importProducts().subscribe(
       () => {
-        this.getAllProducts();
-
+        setTimeout(() => { this.loadingInEx = false; }, 1000);
       }, (error: any) => {
-        console.log(error);
+        alert(error)
       });
   }
 

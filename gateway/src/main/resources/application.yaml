@@ -22,11 +22,6 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*), /$\{segment}
 
-        - id: import
-          uri: http://127.0.0.1:8090
-          predicates:
-            - Path=/import-products
-
         - id: api
           uri: http://127.0.0.1:8088
           predicates:

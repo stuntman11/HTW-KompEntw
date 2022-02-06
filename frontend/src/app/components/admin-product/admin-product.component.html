@@ -1,8 +1,9 @@
 <div class="container">
   <h4 class="mt-4">Product administration:</h4>
   <button (click)="openModal()" class="btn btn-sm btn-primary me-3">New product</button>
-  <button (click)="exportProducts()" class="btn btn-sm btn-outline-danger mx-3">Export CSV</button>
-  <button (click)="importProducts()" class="btn btn-sm btn-outline-danger me-3">Import CSV</button>
+  <button (click)="exportProducts()" class="btn btn-sm btn-outline-danger mx-3" [disabled]="loadingInEx">Export CSV</button>
+  <button (click)="importProducts()" class="btn btn-sm btn-outline-danger me-3" [disabled]="loadingInEx">Import CSV</button>
+  <span *ngIf="loadingInEx" class="text-danger"><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span><small>Export / Import active</small></span>
 
   <h5 class="mt-4">Available products:</h5>
   <table *ngIf="products && products.length > 0" class="table table-sm table-hover">
@@ -129,9 +130,9 @@
         <div class="form-group">
           <label for="country">Country</label>
           <select [(ngModel)]="selected.address.country" class="form-select form-select-sm" id="country">
-            <option selected value="Deutschland">Germany</option>
-            <option value="Österreich">Austria</option>
-            <option value="Schweiz">Switzerland</option>
+            <option selected value="Germany">Germany</option>
+            <option value="Austria">Austria</option>
+            <option value="Switzerland">Switzerland</option>
             <option value="Liechtenstein">Liechtenstein</option>
           </select>
         </div>
@@ -140,7 +141,7 @@
 
     </div>
     <app-loader *ngIf="loading || !selected"></app-loader>
-    <ng-container *ngIf="errorMsg.length == 0">
+    <ng-container *ngIf="!edit && errorMsg.length == 0">
       <button (click)="selectDemo(0)" class="btn btn-sm btn-outline-primary me-2">Demo 1</button>
       <button (click)="selectDemo(1)" class="btn btn-sm btn-outline-primary me-2">Demo 2</button>
       <button (click)="selectDemo(2)" class="btn btn-sm btn-outline-primary me-2">Demo 3</button>
