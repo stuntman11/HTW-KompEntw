@@ -1,6 +1,8 @@
 package de.htwberlin.schbuet.application.data.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -10,6 +12,8 @@ import javax.validation.constraints.Positive;
 import de.htwberlin.schbuet.application.data.geo.GeoAddress;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RequestProduct {
 
     @NotBlank(message = "Name is mandatory")
