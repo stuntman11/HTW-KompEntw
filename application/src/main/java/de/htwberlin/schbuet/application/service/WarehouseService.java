@@ -3,9 +3,11 @@ package de.htwberlin.schbuet.application.service;
 import java.util.List;
 import java.util.UUID;
 
+import io.lettuce.core.output.ValueOutput;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -46,6 +48,11 @@ public class WarehouseService {
     	} catch (RestClientException e) {
             throw new StockNotFoundException(productId, e);
     	}
+    }
+
+    public void importProducts() {
+        String url = "/import-products/";
+        rest.exchange(url, HttpMethod.GET, null, Void.class);
     }
 
     public void createStockItem(UUID productId, RequestProduct requestProduct) {

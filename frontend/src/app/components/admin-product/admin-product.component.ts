@@ -115,7 +115,7 @@ export class AdminProductComponent implements OnInit {
         this.getAllProducts();
 
       }, (error: any) => {
-        console.log(error);
+        alert(error)
       });
   }
 
@@ -125,7 +125,7 @@ export class AdminProductComponent implements OnInit {
         this.getAllProducts();
 
       }, (error: any) => {
-        console.log(error);
+        alert(error)
       });
   }
 

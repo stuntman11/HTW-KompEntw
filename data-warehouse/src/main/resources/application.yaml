@@ -2,13 +2,13 @@
 spring:
   jpa:
     open-in-view: true
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: true
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:h2:mem:mydb
+    url: jdbc:h2:mem:mydb2
     username: warehouse_dbo
     password: warehouse
     driverClassName: org.h2.Driver

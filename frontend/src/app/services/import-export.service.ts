@@ -16,6 +16,6 @@ export class ImportExportService {
   }
 
   importProducts(): Observable<void> {
-    return this.http.get<void>(environment.api + '/import-products');
+    return this.http.post<void>(environment.api + '/api/v1/product/import', null);
   }
 }

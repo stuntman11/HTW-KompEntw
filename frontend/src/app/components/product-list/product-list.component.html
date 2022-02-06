@@ -4,6 +4,10 @@
       <ng-container *ngIf="products">
         <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
       </ng-container>
+      <app-loader *ngIf="loading"></app-loader>
+      <span *ngIf="!loading && products && products.length == 0" class="text-secondary fst-italic">
+        Currently there are no interesting products...
+      </span>
     </div>
   </div>
   <div class="py-5"></div>
