@@ -23,13 +23,4 @@ class TaxTest {
         assertEquals(1, tax.getBasePrice());
         assertEquals(0.19, tax.getTaxRate(), 0.01);
     }
-
-    @Test
-    void testCalculateAbsoluteValue() {
-        var tax = new Tax(-100, 0.19);
-        assertEquals(119, tax.getPriceWithTax());
-        assertEquals(19, tax.getIncludedTax());
-        assertEquals(100, tax.getBasePrice());
-        assertEquals(0.19, tax.getTaxRate(), 0.01);
-    }
 }
