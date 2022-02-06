@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @SpringBootTest
-class WarehouseServiceTest {
+class StockServiceTest {
 
     @Autowired
-    private WarehouseService warehouse;
+    private StockService warehouse;
 
     private RequestStockItem item1;
     private RequestStockItem item2;

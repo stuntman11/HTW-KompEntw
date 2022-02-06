@@ -54,7 +54,9 @@ public class GoogleMapsLocationProvider implements GeoLocationProvider {
 		GeocodingResult[] results;
 		
 		try {
-			results = GeocodingApi.geocode(context, address).await();
+			results = GeocodingApi.geocode(context, address)
+					.language(config.getLanguage())
+					.await();
 		} catch (Exception e) {
 			log.error("Failed to execute geocode on google maps");
 			throw new GeoLookupException("Failed to execute geocode on google maps", e);
@@ -71,7 +73,7 @@ public class GoogleMapsLocationProvider implements GeoLocationProvider {
 		
 		try {
 			results = GeocodingApi.reverseGeocode(context, location)
-					.language(config.getApiKey())
+					.language(config.getLanguage())
 					.await();
 		} catch (Exception e) {
 			log.error("Failed to execute reverse geocode on google maps");

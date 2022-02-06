@@ -2,7 +2,7 @@ package de.htwberlin.schbuet.data_warehouse.controller;
 
 import de.htwberlin.schbuet.data_warehouse.data.request.RequestStockItem;
 import de.htwberlin.schbuet.data_warehouse.data.main.StockItem;
-import de.htwberlin.schbuet.data_warehouse.services.WarehouseService;
+import de.htwberlin.schbuet.data_warehouse.services.StockService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -13,9 +13,9 @@ import java.util.UUID;
 @RestController
 public class StockController {
 
-    private final WarehouseService warehouse;
+    private final StockService warehouse;
 
-    public StockController(WarehouseService warehouse) {
+    public StockController(StockService warehouse) {
         this.warehouse = warehouse;
     }
 

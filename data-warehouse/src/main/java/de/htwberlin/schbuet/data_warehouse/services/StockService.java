@@ -14,11 +14,11 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class WarehouseService {
+public class StockService {
 
     private final StockItemRepository stockItemRepository;
 
-    public WarehouseService(StockItemRepository stockItemRepository) {
+    public StockService(StockItemRepository stockItemRepository) {
         this.stockItemRepository = stockItemRepository;
     }
 

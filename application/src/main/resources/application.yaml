@@ -21,7 +21,7 @@ springdoc:
 
 googlemaps:
   apikey: ""
-  language: "de-DE"
+  language: "en"
 
 redis:
   hostname: 127.0.0.1
