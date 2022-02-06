@@ -34,7 +34,7 @@ public class WarehouseService {
         		.build();
     }
 
-    public ResponseStockItem getStockForProduct(UUID productId) throws StockNotFoundException {
+    public ResponseStockItem getStockForProduct(UUID productId) {
     	try {
             String productUrl = "/stock/" + productId.toString();
             return rest.getForObject(productUrl, ResponseStockItem.class);
@@ -43,7 +43,7 @@ public class WarehouseService {
     	}
     }
 
-    public void createStockItem(UUID productId, RequestProduct requestProduct) throws StockCreationFailedException {
+    public void createStockItem(UUID productId, RequestProduct requestProduct) {
         try {
 	        var coordinates = geo.getCoordsFromAddress(requestProduct.getAddress());
 	        var requestStock = RequestStockItem.builder()

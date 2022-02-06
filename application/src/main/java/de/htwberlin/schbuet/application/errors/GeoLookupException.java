@@ -1,6 +1,6 @@
 package de.htwberlin.schbuet.application.errors;
 
-public class GeoLookupException extends Exception {
+public class GeoLookupException extends RuntimeException {
 	private static final long serialVersionUID = 462844803647170540L;
 	
 	public GeoLookupException() {
