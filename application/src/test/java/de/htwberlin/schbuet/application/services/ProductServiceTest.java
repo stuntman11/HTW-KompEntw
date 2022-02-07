@@ -34,7 +34,7 @@ class ProductServiceTest {
 	final RequestProduct PRODUCT1 = new RequestProduct("Name1", "Desc", "Category", "IT-1234", null, 1000, 2022, 5, 2);
 	final RequestProduct PRODUCT2 = new RequestProduct("Name2", "Desc2", "Category2", "IT-4321", null, 2000, 2021, 1, 7);
 	final ResponseStockItem STOCK = new ResponseStockItem(null, null, 4, 2, 52.152, 23.632, null, null);
-	final GeoAddress ADDRESS = new GeoAddress("Deutschland", "Berlin", "10178", "Alexanderplatz 1");
+	final GeoAddress ADDRESS = new GeoAddress("Germany", "Berlin", "10178", "Alexanderplatz 1");
 	final RequestTax TAX = new RequestTax(100, 19, 119, 0.19);
 	
 	@BeforeEach

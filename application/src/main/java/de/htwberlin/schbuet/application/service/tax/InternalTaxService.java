@@ -27,4 +27,8 @@ public class InternalTaxService implements TaxService {
 			throw new TaxCouldNotBeCalculatedException(e);
 		}
 	}
+	
+	public RestTemplate getRestTemplate() {
+		return rest;
+	}
 }

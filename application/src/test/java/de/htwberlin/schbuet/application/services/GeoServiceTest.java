@@ -21,7 +21,7 @@ class GeoServiceTest {
 	GeoService geo;
 
 	final GeoCoords COORDS = new GeoCoords(52.612, 6.541);
-	final GeoAddress ADDRESS = new GeoAddress("Deutschland", "Berlin", "10178", "Alexanderplatz 1");
+	final GeoAddress ADDRESS = new GeoAddress("Germany", "Berlin", "10178", "Alexanderplatz 1");
 
 	@BeforeEach
     void setUp(){
