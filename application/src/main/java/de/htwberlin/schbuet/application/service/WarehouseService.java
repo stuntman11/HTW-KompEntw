@@ -1,13 +1,8 @@
 package de.htwberlin.schbuet.application.service;
 
-import de.htwberlin.schbuet.application.data.request.RequestProduct;
-import de.htwberlin.schbuet.application.data.request.RequestStockItem;
-import de.htwberlin.schbuet.application.data.response.ResponseStockItem;
-import de.htwberlin.schbuet.application.errors.GeoLookupException;
-import de.htwberlin.schbuet.application.errors.StockCreationFailedException;
-import de.htwberlin.schbuet.application.errors.StockNotFoundException;
-import de.htwberlin.schbuet.application.service.geo.GeoService;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,8 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.UUID;
+import de.htwberlin.schbuet.application.data.request.RequestProduct;
+import de.htwberlin.schbuet.application.data.request.RequestStockItem;
+import de.htwberlin.schbuet.application.data.response.ResponseStockItem;
+import de.htwberlin.schbuet.application.errors.GeoLookupException;
+import de.htwberlin.schbuet.application.errors.StockCreationFailedException;
+import de.htwberlin.schbuet.application.errors.StockNotFoundException;
+import de.htwberlin.schbuet.application.service.geo.GeoService;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -48,11 +49,6 @@ public class WarehouseService {
     	}
     }
 
-    public void importProducts() {
-        String url = "/import-products/";
-        rest.exchange(url, HttpMethod.GET, null, Void.class);
-    }
-
     public void createStockItem(UUID productId, RequestProduct requestProduct) {
         try {
 	        var coordinates = geo.getCoordsFromAddress(requestProduct.getAddress());
@@ -63,14 +59,27 @@ public class WarehouseService {
 	                .latitude(coordinates.getLatitude())
 	                .longitude(coordinates.getLongitude())
 	                .build();
-        
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-            rest.postForEntity("/stock/", new HttpEntity<>(requestStock, headers), String.class);
+	        
+	        postStockItem(requestStock);
     	} catch (RestClientException | GeoLookupException e) {
     		throw new StockCreationFailedException(productId, e);
     	}
         log.info("warehouse stock item was successfully created");
     }
+    
+    public void importProducts() {
+        String url = "/import-products/";
+        rest.exchange(url, HttpMethod.GET, null, Void.class);
+    }
+
+    private void postStockItem(RequestStockItem requestStock) throws RestClientException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        rest.postForEntity("/stock/", new HttpEntity<>(requestStock, headers), String.class);
+    }
+    
+    public RestTemplate getRestTemplate() {
+		return rest;
+	}
 }
