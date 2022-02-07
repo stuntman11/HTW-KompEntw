@@ -2,11 +2,13 @@ package de.htwberlin.schbuet.application.data.response;
 
 import de.htwberlin.schbuet.application.data.main.Product;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
 public class ResponseBasicProduct {
 
     private UUID id;
